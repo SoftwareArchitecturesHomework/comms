@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "ecto.create": "mix ecto.create",
+    "server": "mix phx.server"
+  }
+}
