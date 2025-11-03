@@ -1,6 +1,11 @@
 defmodule CommsWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :comms
 
+  # WebSocket configuration for Discord bot and other real-time features
+  socket "/socket", CommsWeb.UserSocket,
+    websocket: true,
+    longpoll: false
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # When code reloading is disabled (e.g., in production),
