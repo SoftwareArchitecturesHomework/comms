@@ -3,17 +3,20 @@ defmodule CommsWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug CommsWeb.Plugs.VerifyJWT
+    plug CommsWeb.Plugs.ExtractClaims
   end
 
   scope "/api", CommsWeb do
     pipe_through :api
 
-    # API routes will go here
-    # Email endpoint
-    # Discord bot endpoint
+    # Email endpoint - other services can send emails via this API
+    post "/emails", EmailController, :send_email
+
+    # Discord bot endpoint (to be implemented)
+    # post "/discord/webhook", DiscordController, :webhook
   end
 
-  # Health check endpoint (no pipeline needed)
   scope "/", CommsWeb do
     get "/health", HealthController, :check
   end
