@@ -8,7 +8,6 @@
 import Config
 
 config :comms,
-  ecto_repos: [Comms.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint

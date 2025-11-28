@@ -21,7 +21,6 @@ defmodule CommsWeb.Endpoint do
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :comms
   end
 
   plug Plug.RequestId

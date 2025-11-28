@@ -1,6 +1,6 @@
 {
-  "scripts": {
-    "ecto.create": "mix ecto.create",
-    "server": "mix phx.server"
-  }
+	"scripts": {
+		"server": "mix phx.server",
+		"list-mix-tasks": "mix help"
+	}
 }
