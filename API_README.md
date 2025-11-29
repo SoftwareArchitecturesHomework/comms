@@ -15,8 +15,7 @@ A Phoenix-based messaging service designed to run in a containerized environment
 lib/
 ├── comms/                          # Business logic
 │   ├── application.ex              # Application supervisor
-│   ├── mailer.ex                   # Swoosh mailer
-│   └── repo.ex                     # Ecto repository
+│   └── mailer.ex                   # Swoosh mailer
 ├── comms_web/                      # Web interface
 │   ├── channels/                   # Phoenix Channels
 │   │   ├── discord_channel.ex      # Discord bot WebSocket channel
@@ -188,12 +187,6 @@ The service includes placeholder JWT plugs that need to be implemented:
 # Get dependencies
 mix deps.get
 
-# Create database
-mix ecto.create
-
-# Run migrations
-mix ecto.migrate
-
 # Start the server
 mix phx.server
 ```
@@ -227,7 +220,6 @@ The service is designed to run in a containerized environment. Make sure to:
 ### Environment Variables
 
 ```bash
-DATABASE_URL=ecto://user:pass@localhost/comms_prod
 SECRET_KEY_BASE=your_secret_key_base
 PHX_HOST=your_host.com
 PORT=4000
@@ -246,7 +238,6 @@ JWT_SECRET=your_jwt_secret
 
 Update `config/runtime.exs` for production settings:
 
-- Database pool size
 - Email adapter (change from Local to SMTP, SendGrid, etc.)
 - SSL configuration
 - CORS settings if needed

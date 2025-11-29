@@ -7,6 +7,30 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 
+# ## JWT Configuration
+#
+# For asymmetric JWT verification, provide the public key.
+# The key should be in PEM format (RSA, ECDSA, etc.)
+if jwt_public_key = System.get_env("JWT_PUBLIC_KEY") do
+  config :comms, :jwt_public_key, jwt_public_key
+end
+
+# ## Email Configuration
+#
+# Configure SMTP settings from environment variables for all environments
+if smtp_server = System.get_env("SMTP_SERVER") do
+  config :comms, Comms.Mailer,
+    adapter: Swoosh.Adapters.SMTP,
+    relay: smtp_server,
+    username: System.get_env("SMTP_USERNAME"),
+    password: System.get_env("SMTP_PASSWORD"),
+    port: String.to_integer(System.get_env("SMTP_PORT") || "587"),
+    ssl: System.get_env("SMTP_SSL") == "true",
+    tls: :always,
+    auth: :always,
+    retries: 3
+end
+
 # ## Using releases
 #
 # If you use `mix release`, you need to explicitly enable the server

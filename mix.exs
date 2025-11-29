@@ -41,6 +41,7 @@ defmodule Comms.MixProject do
       {:phoenix, "~> 1.8.0"},
       {:swoosh, "~> 1.16"},
       {:req, "~> 0.5"},
+      {:joken, "~> 2.6"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.26"},
