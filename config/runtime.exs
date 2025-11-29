@@ -19,16 +19,42 @@ end
 #
 # Configure SMTP settings from environment variables for all environments
 if smtp_server = System.get_env("SMTP_SERVER") do
+  ssl = System.get_env("SMTP_SSL") == "true"
+  port = String.to_integer(System.get_env("SMTP_PORT") || if(ssl, do: "465", else: "587"))
+  verify_mode_env = System.get_env("SMTP_TLS_VERIFY")
+
+  verify_mode =
+    case verify_mode_env do
+      nil -> :verify_peer
+      "false" -> :verify_none
+      "0" -> :verify_none
+      "true" -> :verify_peer
+      "1" -> :verify_peer
+      _ -> :verify_peer
+    end
+
+  cacertfile = System.get_env("SMTP_CACERTFILE")
+
   config :comms, Comms.Mailer,
     adapter: Swoosh.Adapters.SMTP,
     relay: smtp_server,
     username: System.get_env("SMTP_USERNAME"),
     password: System.get_env("SMTP_PASSWORD"),
-    port: String.to_integer(System.get_env("SMTP_PORT") || "587"),
-    ssl: System.get_env("SMTP_SSL") == "true",
-    tls: :always,
+    port: port,
+    ssl: ssl,
     auth: :always,
-    retries: 3
+    tls: if(not ssl, do: :always, else: :never),
+    retries: 3,
+    no_mx_lookups: true,
+    tls_options:
+      Enum.reject(
+        [
+          {:verify, verify_mode},
+          {:depth, 3},
+          cacertfile && {:cacertfile, cacertfile}
+        ],
+        &(!&1)
+      )
 end
 
 # ## Using releases

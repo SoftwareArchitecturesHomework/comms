@@ -1,8 +1,11 @@
 {
-	"scripts": {
-		"server": "mix phx.server",
-		"list-mix-tasks": "mix help",
-		"rsa-key-gen": "ssh-keygen -t rsa -b 4096 -m PEM -f private.key",
-		"rsa-pub-key-gen": "ssh-keygen -f private.key -e -m PKCS8 > public.key"
-	}
+  "scripts": {
+    "setup": "mix deps.get && mix compile",
+    "server": "mix phx.server",
+    "server-iex": "iex -S mix phx.server",
+    "test": "mix test",
+    "list-mix-tasks": "mix help",
+    "rsa-key-gen": "ssh-keygen -t rsa -b 4096 -m PEM -f private.key",
+    "rsa-pub-key-gen": "ssh-keygen -f private.key -e -m PKCS8 > public.key"
+  }
 }

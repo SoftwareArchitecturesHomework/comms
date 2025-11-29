@@ -11,10 +11,8 @@ defmodule CommsWeb.Router do
     pipe_through :api
 
     # Email endpoint - other services can send emails via this API
+    get "/email/test", EmailController, :send_test
     post "/emails", EmailController, :send_email
-
-    # Discord bot endpoint (to be implemented)
-    # post "/discord/webhook", DiscordController, :webhook
   end
 
   scope "/", CommsWeb do

@@ -20,9 +20,10 @@ A Phoenix-based microservice API for handling communications including email sen
 
 1. Clone the repository
 2. Install dependencies:
-   ```bash
-   mix deps.get
-   ```
+
+```bash
+mix deps.get
+```
 
 ### Environment Configuration
 
@@ -32,27 +33,28 @@ This application requires environment variables for JWT and email configuration.
 
 1. Copy the example environment file:
 
-   ```bash
-   cp .env.example .env
-   ```
+```bash
+cp .env.example .env
+```
 
 2. Edit `.env` with your actual values:
 
-   - `JWT_PUBLIC_KEY`: Your RSA public key (PEM format)
-   - `SMTP_*`: Your email server credentials (Gmail example provided)
+- `JWT_PUBLIC_KEY`: Your RSA public key (PEM format)
+- `SMTP_*`: Your email server credentials (Gmail example provided)
 
 3. Source the environment:
 
-   ```bash
-   source .env
-   ```
+```bash
+source .env
+```
 
 4. Start the server:
-   ```bash
-   ./dev-server.sh
-   # or
-   mix phx.server
-   ```
+
+```bash
+./dev-server.sh
+# or
+mix phx.server
+```
 
 ### Using Gmail for Email
 

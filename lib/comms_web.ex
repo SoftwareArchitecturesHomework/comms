@@ -39,8 +39,6 @@ defmodule CommsWeb do
     quote do
       use Phoenix.Controller, formats: [:json]
 
-      use Gettext, backend: CommsWeb.Gettext
-
       import Plug.Conn
 
       unquote(verified_routes())

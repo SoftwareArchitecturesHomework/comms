@@ -31,7 +31,6 @@ lib/
 │   │   ├── extract_claims.ex       # JWT claims extraction (TODO)
 │   │   └── verify_jwt.ex           # JWT verification (TODO)
 │   ├── endpoint.ex                 # Phoenix endpoint
-│   ├── gettext.ex                  # I18n
 │   ├── router.ex                   # Routes
 │   └── telemetry.ex                # Telemetry setup
 └── comms_web.ex                    # Web module definitions

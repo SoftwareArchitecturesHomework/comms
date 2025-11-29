@@ -1,6 +1,7 @@
 # Environment Setup Guide
 
 This guide explains how to set up the required environment variables for the Comms API.
+The dockerized version of this application also needs these environment variables to function correctly.
 
 ## Required Environment Variables
 
@@ -9,19 +10,27 @@ This guide explains how to set up the required environment variables for the Com
 For asymmetric JWT verification, you need to provide a public key:
 
 ```bash
-export JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
------END PUBLIC KEY-----"
+nr rsa-key-gen # this should be used to sign tokens
+nr rsa-pub-key-gen # this is actually used by the api to verify tokens
+export JWT_PUBLIC_KEY=$(cat public.key)
 ```
 
-The public key should be in PEM format and match the private key used by your authentication service.
+The public key should be in PEM format (which it will be if you used the above commands) and match the private key used by your authentication service.
+
+You can generate a JWT token for testing using [https://dinochiesa.github.io/jwt/](https://dinochiesa.github.io/jwt/), ensuring you use the RS256 algorithm and sign it with the corresponding private key.
+
+I recommend saving it to an environment variable for easy access:
+
+```bash
+export JWT_TOKEN=your-generated-jwt-token
+```
 
 ### Email Configuration (Gmail Example)
 
 To send emails via Gmail, you need to:
 
 1. Enable 2-factor authentication on your Google account
-2. Generate an App Password: https://myaccount.google.com/apppasswords
+2. Generate an App Password: [https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
 3. Set the following environment variables:
 
 ```bash
@@ -30,6 +39,9 @@ export SMTP_PORT=587
 export SMTP_USERNAME=your-email@gmail.com
 export SMTP_PASSWORD=your-16-char-app-password
 export SMTP_SSL=false
+export SMTP_CACERTFILE=/etc/ssl/certs/ca-certificates.crt
+# Optional: for debugging TLS issues (INSECURE, dev-only)
+export SMTP_TLS_VERIFY=false
 ```
 
 ### Optional Configuration
@@ -43,42 +55,33 @@ export PHX_SERVER=true        # Auto-start server
 
 1. Copy `.env.example` to `.env`:
 
-   ```bash
-   cp .env.example .env
-   ```
+```bash
+cp .env.example .env
+```
 
 2. Edit `.env` with your actual values
 
 3. Source the environment file:
 
-   ```bash
-   source .env
-   ```
+```bash
+source .env
+```
 
 4. Start the server:
-   ```bash
-   mix phx.server
-   ```
+
+```bash
+mix phx.server
+```
 
 ## Testing Email Configuration
 
 You can test your email configuration using the Elixir interactive shell:
 
 ```bash
-iex -S mix
-```
-
-```elixir
-# Create a test email
-email = Swoosh.Email.new(
-  to: "recipient@example.com",
-  from: {"Comms API", System.get_env("SMTP_USERNAME")},
-  subject: "Test Email",
-  text_body: "This is a test email from the Comms API"
-)
-
-# Send it
-Comms.Mailer.deliver(email)
+nr server
+curl --verbose
+  -H "Authorization: Bearer $JWT_TOKEN" \
+	http://localhost:4000/api/email/test
 ```
 
 ## Production Configuration
