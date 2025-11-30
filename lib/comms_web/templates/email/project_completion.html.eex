@@ -1,0 +1,28 @@
+<%# Assigns expected:
+# project: %{id: integer, name: String}
+# manager: %{id: integer, name: String, email: String}
+# member: %{id: integer, name: String, email: String}
+# summary: String (optional)
+# action_url: String (optional CTA to view report)
+%>
+<div>
+  <p class="muted">Hello <strong><%= @member.name %></strong>,</p>
+  <p>
+    The project <strong><%= @project.name %></strong> has been marked as
+    <span class="tag">completed</span> by <strong><%= @manager.name %></strong>. 🎉
+  </p>
+
+  <%= if @summary do %>
+    <div class="divider"></div>
+    <p class="muted">Summary</p>
+    <p><%= @summary %></p>
+  <% end %>
+
+  <div style="margin-top: 16px; text-align: center;">
+    <%= if assigns[:action_url] do %>
+      <a href="<%= @base_url %><%= @action_url %>">
+        <div class="btn">View Completion Report</div>
+      </a>
+    <% end %>
+  </div>
+</div>

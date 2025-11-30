@@ -13,7 +13,16 @@ config :comms, CommsWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "UfNbV9+n+EOm7nCm3TndlO4lynUcLlxcH/pXq9FToO71lN07SeeLV71qHRRzxf+B"
+  secret_key_base: "UfNbV9+n+EOm7nCm3TndlO4lynUcLlxcH/pXq9FToO71lN07SeeLV71qHRRzxf+B",
+  live_reload: [
+    patterns: [
+      ~r"lib/.*(ex)$",
+      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"lib/your_app_web/(?!.*uploads)/views/.*(ex)$",
+      ~r"lib/your_app_web/live/.*(ex)$",
+      ~r"lib/your_app_web/(controllers|live|components)/.*(ex|heex)$"
+    ]
+  ]
 
 # ## SSL Support
 #

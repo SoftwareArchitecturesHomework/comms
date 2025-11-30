@@ -1,5 +1,5 @@
 [
   import_deps: [:phoenix],
   subdirectories: ["priv/*/migrations"],
-  inputs: ["*.{heex,ex,exs}", "{config,lib,test}/**/*.{heex,ex,exs}", "priv/*/seeds.exs"]
+  inputs: ["*.{heex,eex,ex,exs}", "{config,lib,test}/**/*.{heex,eex,ex,exs}", "priv/*/seeds.exs"]
 ]

@@ -1,0 +1,49 @@
+<%# Assigns expected:
+# task: %{id: integer, details: %{start: integer, end: integer, name: String, description: String}}
+# assigner: %{id: integer, name: String, email: String}
+# assignees: [%{id: integer, name: String, email: String}]
+# action_url: String (optional CTA to view task)
+# accept_url: String (optional CTA to accept invitation)
+%>
+<div>
+  <p class="muted">Hello,</p>
+  <p>
+    You have a new <span class="tag">task assignment</span>:
+    <strong><%= @task.details.name %></strong> from <strong><%= @assigner.name %></strong>.
+  </p>
+
+  <div class="divider"></div>
+  <p class="muted">Task details</p>
+  <ul class="list">
+    <li><strong>Name:</strong> <%= @task.details.name %></li>
+    <%= if @task.details.description && @task.details.description != "" do %>
+      <li><strong>Description:</strong> <%= @task.details.description %></li>
+    <% end %>
+    <%= if @task.details.start do %>
+      <li><strong>Start:</strong> <%= DateTime.from_unix!(@task.details.start) |> DateTime.to_string() %></li>
+    <% end %>
+    <%= if @task.details.end do %>
+      <li><strong>End:</strong> <%= DateTime.from_unix!(@task.details.end) |> DateTime.to_string() %></li>
+    <% end %>
+  </ul>
+
+  <p class="muted">Assignees</p>
+  <ul class="list">
+    <%= for user <- @assignees do %>
+      <li><%= user.name %> (<%= user.email %>)</li>
+    <% end %>
+  </ul>
+
+  <div style="margin-top: 16px;">
+    <%= if assigns[:accept_url] do %>
+      <a href="<%= @accept_url %>" class="btn">Accept Invitation</a>
+    <% end %>
+    <%= if assigns[:action_url] do %>
+      <span style="margin-left: 12px;"><a href="<%= @action_url %>" class="btn-outline">View Task</a></span>
+    <% end %>
+  </div>
+
+  <p style="margin-top: 16px;" class="muted">
+    If you cannot take this task, please inform <%= @assigner.name %>.
+  </p>
+</div>

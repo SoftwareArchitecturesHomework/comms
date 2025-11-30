@@ -1,0 +1,39 @@
+<%# Assigns expected:
+# task: %{id: integer, details: %{name: String, description: String}}
+# assigner: %{id: integer, name: String, email: String}
+# assignees: [%{id: integer, name: String, email: String}] (request target)
+# action_url: String (optional CTA to view task)
+# approve_url: String (CTA)
+# deny_url: String (CTA)
+%>
+<div>
+  <p class="muted">Hello,</p>
+  <p>
+    <strong><%= @assigner.name %></strong> requested approval for the task <strong><%= @task.details.name %></strong>.
+  </p>
+
+  <%= if @task.details.description && @task.details.description != "" do %>
+    <div class="divider"></div>
+    <p class="muted">Reason / Notes</p>
+    <p><%= @task.details.description %></p>
+  <% end %>
+
+  <p class="muted">Impacted users</p>
+  <ul class="list">
+    <%= for user <- @assignees do %>
+      <li><%= user.name %> (<%= user.email %>)</li>
+    <% end %>
+  </ul>
+
+  <div style="margin-top: 16px; display: flex; gap: 12px;">
+    <%= if assigns[:approve_url] do %>
+      <a href="<%= @approve_url %>" class="btn">Approve</a>
+    <% end %>
+    <%= if assigns[:deny_url] do %>
+      <a href="<%= @deny_url %>" class="btn-outline">Deny</a>
+    <% end %>
+    <%= if assigns[:action_url] do %>
+      <a href="<%= @action_url %>" class="btn-outline">View Task</a>
+    <% end %>
+  </div>
+</div>

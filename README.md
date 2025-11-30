@@ -39,7 +39,7 @@ cp .env.example .env
 
 2. Edit `.env` with your actual values:
 
-- `JWT_PUBLIC_KEY`: Your RSA public key (PEM format)
+- `JWT_PUBLIC_KEY`: Your RSA public key (PEM format) for RS256 verification
 - `SMTP_*`: Your email server credentials (Gmail example provided)
 
 3. Source the environment:

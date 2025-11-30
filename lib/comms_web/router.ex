@@ -4,15 +4,21 @@ defmodule CommsWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug CommsWeb.Plugs.VerifyJWT
-    plug CommsWeb.Plugs.ExtractClaims
   end
 
   scope "/api", CommsWeb do
     pipe_through :api
 
-    # Email endpoint - other services can send emails via this API
-    get "/email/test", EmailController, :send_test
-    post "/emails", EmailController, :send_email
+    # Notification endpoints mapped from CommsService RPCs
+    post "/notifications/user-added", NotificationController, :user_added
+    post "/notifications/user-removed", NotificationController, :user_removed
+    post "/notifications/project-completed", NotificationController, :project_completed
+    post "/notifications/task-assigned", NotificationController, :task_assigned
+    post "/notifications/task-completed", NotificationController, :task_completed
+
+    post "/notifications/task-permission-request",
+         NotificationController,
+         :task_permission_request
   end
 
   scope "/", CommsWeb do

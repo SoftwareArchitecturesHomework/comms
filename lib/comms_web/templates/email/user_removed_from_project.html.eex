@@ -1,0 +1,29 @@
+<%# Assigns expected:
+# project: %{id: integer, name: String}
+# manager: %{id: integer, name: String, email: String}
+# member: %{id: integer, name: String, email: String}
+# action_url: String (optional CTA to view projects)
+%>
+<div>
+  <p class="muted">Hello <strong><%= @member.name %></strong>,</p>
+  <p>
+    You've been <span class="tag">removed</span> from the project
+    <strong><%= @project.name %></strong> by <strong><%= @manager.name %></strong>.
+  </p>
+  <div class="divider"></div>
+  <p class="muted">Summary</p>
+  <ul class="list">
+    <li><strong>Project:</strong> <%= @project.name %></li>
+    <li><strong>Removed by:</strong> <%= @manager.name %> (<%= @manager.email %>)</li>
+  </ul>
+
+  <div style="margin-top: 16px;">
+    <%= if assigns[:action_url] do %>
+      <a href="<%= @action_url %>" class="btn">View Your Projects</a>
+    <% end %>
+  </div>
+
+  <p style="margin-top: 16px;" class="muted">
+    If you think this was in error, contact <a href="mailto:<%= @manager.email %>"><%= @manager.name %></a>.
+  </p>
+</div>

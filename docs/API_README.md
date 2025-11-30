@@ -6,7 +6,7 @@ A Phoenix-based messaging service designed to run in a containerized environment
 
 - **Email API**: Send emails via REST API with pre-made templates
 - **Discord Bot Channel**: WebSocket channel for Discord bot real-time communication
-- **JWT Middleware** (placeholder): JWT verification and claims extraction plugs
+- **JWT Middleware**: Verified with RS256 Joken signer and claims extraction
 - **Health Check**: Basic health check endpoint for orchestration tools
 
 ## Project Structure
@@ -77,6 +77,38 @@ Response (error):
 }
 ```
 
+### Notification Endpoints (CommsService RPC Mapping)
+
+All endpoints require `Authorization: Bearer <JWT>`.
+
+Base path: `/api/notifications/*`
+
+```
+POST /api/notifications/user-added
+{"project":{"id":1,"name":"Alpha"},"manager":{"id":2,"name":"Alice","email":"alice@example.com"},"member":{"id":5,"name":"Bob","email":"bob@example.com"}}
+Response: {"success":true,"meta":{"sent":1}}
+
+POST /api/notifications/user-removed
+{"project":{"id":1,"name":"Alpha"},"manager":{"id":2,"name":"Alice","email":"alice@example.com"},"member":{"id":5,"name":"Bob","email":"bob@example.com"}}
+Response: {"success":true,"meta":{"sent":1}}
+
+POST /api/notifications/project-completed
+{"project":{"id":1,"name":"Alpha"},"manager":{"id":2,"name":"Alice","email":"alice@example.com"},"member":{"id":5,"name":"Bob","email":"bob@example.com"},"summary":"Delivered all milestones."}
+Response: {"success":true,"meta":{"sent":1}}
+
+POST /api/notifications/task-assigned
+{"task":{"id":9,"details":{"start":1732972800,"end":1733059200,"name":"Prepare Report","description":"Compile Q4 metrics"}},"assigner":{"id":2,"name":"Alice","email":"alice@example.com"},"assignee":[{"id":5,"name":"Bob","email":"bob@example.com"},{"id":6,"name":"Carol","email":"carol@example.com"}]}
+Response: {"success":true,"meta":{"sent":2}}
+
+POST /api/notifications/task-completed
+{"task":{"id":9,"details":{"name":"Prepare Report","description":"Compiled Q4 metrics"}},"assigner":{"id":2,"name":"Alice","email":"alice@example.com"},"assignee":[{"id":5,"name":"Bob","email":"bob@example.com"}]}
+Response: {"success":true,"meta":{"sent":2}}
+
+POST /api/notifications/task-permission-request
+{"task":{"id":9,"details":{"name":"Prepare Report","description":"Need export permissions"}},"assigner":{"id":2,"name":"Alice","email":"alice@example.com"},"assignee":[{"id":5,"name":"Bob","email":"bob@example.com"}]}
+Response: {"success":true,"meta":{"sent":1}}
+```
+
 ## WebSocket Channels
 
 ### Discord Channel
@@ -107,76 +139,17 @@ Connect to the Discord channel for real-time communication:
 
 ## Email Templates
 
-Email templates are located in `lib/comms_web/emails/`. Each template should:
+Email templates are located in `lib/comms_web/templates/email`. Each template should:
 
-1. Import `Swoosh.Email` for email building functions
-2. Import `CommsWeb.Emails.BaseEmail` for common helpers
-3. Provide a `build/2` function that returns a `Swoosh.Email` struct
-4. Include both HTML and text versions
+## JWT Authentication
 
-### Creating a New Email Template
+Implemented with `Joken` RS256 signer. Set `JWT_PUBLIC_KEY` to the PEM string. `VerifyJWT` assigns decoded claims to `conn.assigns.claims`.
 
-```elixir
-defmodule CommsWeb.Emails.MyTemplate do
-  import Swoosh.Email
-  import CommsWeb.Emails.BaseEmail
+Failure case returns:
 
-  def build(to_email, %{param1: param1} = _params) do
-    new_email(to_email)
-    |> subject("My Subject")
-    |> html_body(html_content(param1))
-    |> text_body(text_content(param1))
-  end
-
-  defp html_content(param1) do
-    # Your HTML template
-  end
-
-  defp text_content(param1) do
-    # Your text template
-  end
-end
 ```
-
-Then update `EmailController.build_and_send_email/3` to handle the new template.
-
-## JWT Authentication (TODO)
-
-The service includes placeholder JWT plugs that need to be implemented:
-
-1. **Add a JWT library** to `mix.exs`:
-
-   ```elixir
-   {:joken, "~> 2.6"}
-   # or
-   {:guardian, "~> 2.3"}
-   ```
-
-2. **Implement `CommsWeb.Plugs.VerifyJWT`**:
-
-   - Verify the JWT signature
-   - Check expiration
-   - Validate claims
-
-3. **Implement `CommsWeb.Plugs.ExtractClaims`**:
-
-   - Extract user information from verified token
-   - Assign to `conn.assigns.claims`
-
-4. **Use in router**:
-
-   ```elixir
-   pipeline :authenticated do
-     plug :accepts, ["json"]
-     plug CommsWeb.Plugs.VerifyJWT
-     plug CommsWeb.Plugs.ExtractClaims
-   end
-
-   scope "/api", CommsWeb do
-     pipe_through [:api, :authenticated]
-     post "/emails", EmailController, :send_email
-   end
-   ```
+401 {"error":"Invalid token"}
+```
 
 ## Development
 
@@ -211,27 +184,13 @@ mix precommit
 
 The service is designed to run in a containerized environment. Make sure to:
 
-1. Set environment variables for database connection
-2. Configure email adapter (SMTP, SendGrid, etc.) in `config/runtime.exs`
-3. Set JWT secret keys
-4. Configure Discord bot token validation
+1. Configure email adapter (SMTP, SendGrid, etc.) in `config/runtime.exs`
+2. Set JWT verifier public keys
+3. Configure Discord bot
 
 ### Environment Variables
 
-```bash
-SECRET_KEY_BASE=your_secret_key_base
-PHX_HOST=your_host.com
-PORT=4000
-
-# Email configuration (example for SMTP)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USERNAME=your_username
-SMTP_PASSWORD=your_password
-
-# JWT configuration
-JWT_SECRET=your_jwt_secret
-```
+Refer to [`.env.example`](../.env.example) for environment variables.
 
 ## Production Configuration
 
@@ -243,12 +202,7 @@ Update `config/runtime.exs` for production settings:
 
 ## Next Steps
 
-- [ ] Implement JWT verification with a real library
-- [ ] Add more email templates
+- [x] Implement JWT verification with a real library
+- [x] Add more email templates
 - [ ] Implement Discord bot token authentication
-- [ ] Add rate limiting
-- [ ] Add request logging and monitoring
 - [ ] Implement email queuing for reliability
-- [ ] Add email template versioning
-- [ ] Create integration tests for email sending
-- [ ] Add channel tests for Discord integration

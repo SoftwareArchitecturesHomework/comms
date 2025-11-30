@@ -1,0 +1,36 @@
+<%# Assigns expected:
+# project: %{id: integer, name: String}
+# manager: %{id: integer, name: String, email: String}
+# member: %{id: integer, name: String, email: String}
+# project_url: String (optional)
+# manager_url: String (optional)
+# member_url: String (optional)
+# action_url: String (optional CTA to view project)
+%>
+<div>
+  <p class="muted">Hello <strong><%= @member.name %></strong>,</p>
+  <p>
+    You've been <span class="tag">added</span> to the project
+    <strong><%= @project.name %></strong> by <strong><%= @manager.name %></strong>.
+  </p>
+  <div class="divider"></div>
+  <p class="muted">Project details</p>
+  <ul class="list">
+    <li><strong>Project:</strong> <%= @project.name %></li>
+    <li><strong>Manager:</strong> <%= @manager.name %> (<%= @manager.email %>)</li>
+    <li><strong>Your account:</strong> <%= @member.email %></li>
+  </ul>
+
+  <div style="margin-top: 16px;">
+    <%= if assigns[:action_url] do %>
+      <a href="<%= @action_url %>" class="btn">View Project</a>
+    <% end %>
+    <%= if assigns[:project_url] do %>
+      <span style="margin-left: 12px;"><a href="<%= @project_url %>" class="btn-outline">Project Link</a></span>
+    <% end %>
+  </div>
+
+  <p style="margin-top: 16px;" class="muted">
+    If you believe this was a mistake, please contact <a href="mailto:<%= @manager.email %>"><%= @manager.name %></a>.
+  </p>
+</div>
