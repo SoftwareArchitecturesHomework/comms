@@ -89,10 +89,7 @@ This is a Phoenix API-only application (no database, no LiveView):
   - `controllers/` - API endpoints
   - `router.ex` - Route definitions
 
-## Learn more
+## Other docs
 
-- Official website: https://www.phoenixframework.org/
-- Guides: https://hexdocs.pm/phoenix/overview.html
-- Docs: https://hexdocs.pm/phoenix
-- Forum: https://elixirforum.com/c/phoenix-forum
-- Source: https://github.com/phoenixframework/phoenix
+- [Environment Setup](docs/ENV_SETUP.md)
+- [API Documentation](docs/API_README.md)
