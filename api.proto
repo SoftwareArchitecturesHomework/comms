@@ -2,6 +2,19 @@ syntax = "proto3";
 
 package comms;
 
+enum TaskType {
+	VACATION = 0;
+	MEETING = 1;
+	TASK = 2;
+	INDIVIDUALTASK = 3;
+}
+
+enum Role {
+	EMPLOYEE = 0;
+	MANAGER = 1;
+	ADMIN = 2;
+}
+
 message User {
 	int64 id = 1;
 	string name = 2;
@@ -13,12 +26,22 @@ message Project {
 	string name = 2;
 }
 
+message TaskDetails {
+	int64 start = 2;
+	int64 end = 3;
+	string name = 4;
+	string description = 5;
+}
+
 message Task {
 	int64 id = 1;
-	int64 start = 4;
-	int64 end = 5;
-	string name = 2;
-	string description = 3;
+	TaskDetails details = 2;
+}
+
+message CreateTask {
+	int64 project_id = 1;
+	TaskType type = 2;
+	TaskDetails details = 3;
 }
 
 message ProjectMemberNotification {
@@ -29,8 +52,13 @@ message ProjectMemberNotification {
 
 message TaskAssignmentNotification {
 	Task task = 1;
-	User assigner = 3;
-	User assignee = 4;
+	User assigner = 2;
+	repeated User assignee = 3;
+}
+
+message AcceptInvitation {
+	int64 task_id = 1;
+	int64 user_id = 2;
 }
 
 message EmailResponse {
@@ -45,4 +73,15 @@ service CommsService {
 	rpc SendTaskAssignmentNotification (TaskAssignmentNotification) returns (EmailResponse);
 	rpc SendTaskCompletionNotification (TaskAssignmentNotification) returns (EmailResponse);
 	rpc SendTaskPermissionRequestNotification (TaskAssignmentNotification) returns (EmailResponse);
+}
+
+service Core {
+	rpc GetUserProjects (User) returns (stream Project);
+	rpc GetProjectTasks (Project) returns (stream Task);
+	rpc GetUserTasks (User) returns (stream Task);
+
+	rpc CreateTask (CreateTask) returns (Task);
+
+	rpc InviteToTask (TaskAssignmentNotification) returns (bool);
+	rpc AcceptTaskInvitation (AcceptInvitation) returns (bool);
 }
