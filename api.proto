@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package comms;
+
+message User {
+	int64 id = 1;
+	string name = 2;
+	string email = 3;
+}
+
+message Project {
+	int64 id = 1;
+	string name = 2;
+}
+
+message Task {
+	int64 id = 1;
+	int64 start = 4;
+	int64 end = 5;
+	string name = 2;
+	string description = 3;
+}
+
+message ProjectMemberNotification {
+	Project project = 1;
+	User manager = 2;
+	User member = 3;
+}
+
+message TaskAssignmentNotification {
+	Task task = 1;
+	User assigner = 3;
+	User assignee = 4;
+}
+
+message EmailResponse {
+	bool success = 1;
+}
+
+service CommsService {
+	rpc SendUserAddedToProjectNotification (ProjectMemberNotification) returns (EmailResponse);
+	rpc SendUserRemovedFromProjectNotification (ProjectMemberNotification) returns (EmailResponse);
+	rpc SendProjectCompletionNotification (ProjectMemberNotification) returns (EmailResponse);
+
+	rpc SendTaskAssignmentNotification (TaskAssignmentNotification) returns (EmailResponse);
+	rpc SendTaskCompletionNotification (TaskAssignmentNotification) returns (EmailResponse);
+	rpc SendTaskPermissionRequestNotification (TaskAssignmentNotification) returns (EmailResponse);
+}
