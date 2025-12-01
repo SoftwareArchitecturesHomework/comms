@@ -1,2 +1,165 @@
-GET http://localhost:4000/api/email/test
-Authorization: Bearer {{JWT_TOKEN}}
+POST http://localhost:4000/api/notifications/user-added
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlcmdlbHkwODlAZ21haWwuY29tIiwibmFtZSI6IkdlcmdlbHkgRHJlbcOhayIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2NDQ5Mzc4OX0.NzJ0y-xCk4B0CTCdtwfdWR1AFjxezddxyw88_NVwGNA_2fPl4-zo4k0v65VgQdxhDb9cWUst9nwgfMoYZyaa5hZgayRmcAb18nHJ_zEfrO3Y2jguZTyCFBuZmBY3BPWP2ScvgT2gX36F2O0yOj8EuWFSuDBiIbmFxQlWIfPJUG12Zj28vU0eTvtBR7JGP1MA-lk39zdACHAhtotqUJklYtxfMP59IHlWehQdXyeJHUBZuK02RrZBTv6azyamXn_i3GKZmMBAfdSLpaNbdiNwh206GPRpXlLguWHZxqV6tXMgouH63OL5e1_Ogj76J3-Ikx9n5MxeRz4DDRIYul1nkmiNgG2ReCfhPXobsMSRC_EqmoKRiy4wvH2-z01NiZHpvbY15ZhnatlBXnODs6IULNX6laB5AjHxlPnRpbgnI7HHid-SrntUKF2ooGxCWOFbeeDqk8XX6DFv6G4GdXkXEbyf69DNr7LQJphbhzKTRlRKJwjY_SvkXW9PhUsMLPui9mvjcrRJ7bJmjQL05KKjit_4UZHl9WLKHlqRaAxu2HvkhlQzSUo3EUYpzYpKKo5AcZIRSHRjaNbXTtCjyuWUc_1Sr4pm5mEz89CJv4kRScHnwtRIxIcDEjuzOWz_2coMAJJ0_DZotOk1PJPbUP5PQbzcvC-kemouDD9tu4uJNvk
+Content-Type: application/json
+
+{
+	"project": {
+		"id": 1234,
+		"name": "Vonatkerék pumpálás"
+	},
+	"manager": {
+		"name": "Mr. Fritz Teufel",
+		"email": "fritz.teufel@bosch.com"
+	},
+	"member": {
+		"name": "Gergely Dremák",
+		"email": "gergely089@gmail.com"
+	}
+}
+
+###
+
+POST http://localhost:4000/api/notifications/user-removed
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlcmdlbHkwODlAZ21haWwuY29tIiwibmFtZSI6IkdlcmdlbHkgRHJlbcOhayIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2NDQ5Mzc4OX0.NzJ0y-xCk4B0CTCdtwfdWR1AFjxezddxyw88_NVwGNA_2fPl4-zo4k0v65VgQdxhDb9cWUst9nwgfMoYZyaa5hZgayRmcAb18nHJ_zEfrO3Y2jguZTyCFBuZmBY3BPWP2ScvgT2gX36F2O0yOj8EuWFSuDBiIbmFxQlWIfPJUG12Zj28vU0eTvtBR7JGP1MA-lk39zdACHAhtotqUJklYtxfMP59IHlWehQdXyeJHUBZuK02RrZBTv6azyamXn_i3GKZmMBAfdSLpaNbdiNwh206GPRpXlLguWHZxqV6tXMgouH63OL5e1_Ogj76J3-Ikx9n5MxeRz4DDRIYul1nkmiNgG2ReCfhPXobsMSRC_EqmoKRiy4wvH2-z01NiZHpvbY15ZhnatlBXnODs6IULNX6laB5AjHxlPnRpbgnI7HHid-SrntUKF2ooGxCWOFbeeDqk8XX6DFv6G4GdXkXEbyf69DNr7LQJphbhzKTRlRKJwjY_SvkXW9PhUsMLPui9mvjcrRJ7bJmjQL05KKjit_4UZHl9WLKHlqRaAxu2HvkhlQzSUo3EUYpzYpKKo5AcZIRSHRjaNbXTtCjyuWUc_1Sr4pm5mEz89CJv4kRScHnwtRIxIcDEjuzOWz_2coMAJJ0_DZotOk1PJPbUP5PQbzcvC-kemouDD9tu4uJNvk
+Content-Type: application/json
+
+{
+	"project": {
+		"id": 1234,
+		"name": "Vonatkerék pumpálás"
+	},
+	"manager": {
+		"name": "Mr. Fritz Teufel",
+		"email": "fritz.teufel@bosch.com"
+	},
+	"member": {
+		"name": "Gergely Dremák",
+		"email": "gergely089@gmail.com"
+	}
+}
+
+###
+
+POST http://localhost:4000/api/notifications/project-completed
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlcmdlbHkwODlAZ21haWwuY29tIiwibmFtZSI6IkdlcmdlbHkgRHJlbcOhayIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2NDQ5Mzc4OX0.NzJ0y-xCk4B0CTCdtwfdWR1AFjxezddxyw88_NVwGNA_2fPl4-zo4k0v65VgQdxhDb9cWUst9nwgfMoYZyaa5hZgayRmcAb18nHJ_zEfrO3Y2jguZTyCFBuZmBY3BPWP2ScvgT2gX36F2O0yOj8EuWFSuDBiIbmFxQlWIfPJUG12Zj28vU0eTvtBR7JGP1MA-lk39zdACHAhtotqUJklYtxfMP59IHlWehQdXyeJHUBZuK02RrZBTv6azyamXn_i3GKZmMBAfdSLpaNbdiNwh206GPRpXlLguWHZxqV6tXMgouH63OL5e1_Ogj76J3-Ikx9n5MxeRz4DDRIYul1nkmiNgG2ReCfhPXobsMSRC_EqmoKRiy4wvH2-z01NiZHpvbY15ZhnatlBXnODs6IULNX6laB5AjHxlPnRpbgnI7HHid-SrntUKF2ooGxCWOFbeeDqk8XX6DFv6G4GdXkXEbyf69DNr7LQJphbhzKTRlRKJwjY_SvkXW9PhUsMLPui9mvjcrRJ7bJmjQL05KKjit_4UZHl9WLKHlqRaAxu2HvkhlQzSUo3EUYpzYpKKo5AcZIRSHRjaNbXTtCjyuWUc_1Sr4pm5mEz89CJv4kRScHnwtRIxIcDEjuzOWz_2coMAJJ0_DZotOk1PJPbUP5PQbzcvC-kemouDD9tu4uJNvk
+Content-Type: application/json
+
+{
+	"project": {
+		"id": 372,
+		"name": "Legacy API Migration"
+	},
+	"manager": {
+		"name": "Bob Manager",
+		"email": "manager@company.com"
+	},
+	"member": {
+		"name": "Gergely Dremák",
+		"email": "gergely089@gmail.com"
+	},
+	"summary": "Az összes vonatkerék sikeresen fel lett pumpálva. UwU very hard vonatkerék!"
+}
+
+###
+POST http://localhost:4000/api/notifications/task-assigned
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlcmdlbHkwODlAZ21haWwuY29tIiwibmFtZSI6IkdlcmdlbHkgRHJlbcOhayIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2NDQ5Mzc4OX0.NzJ0y-xCk4B0CTCdtwfdWR1AFjxezddxyw88_NVwGNA_2fPl4-zo4k0v65VgQdxhDb9cWUst9nwgfMoYZyaa5hZgayRmcAb18nHJ_zEfrO3Y2jguZTyCFBuZmBY3BPWP2ScvgT2gX36F2O0yOj8EuWFSuDBiIbmFxQlWIfPJUG12Zj28vU0eTvtBR7JGP1MA-lk39zdACHAhtotqUJklYtxfMP59IHlWehQdXyeJHUBZuK02RrZBTv6azyamXn_i3GKZmMBAfdSLpaNbdiNwh206GPRpXlLguWHZxqV6tXMgouH63OL5e1_Ogj76J3-Ikx9n5MxeRz4DDRIYul1nkmiNgG2ReCfhPXobsMSRC_EqmoKRiy4wvH2-z01NiZHpvbY15ZhnatlBXnODs6IULNX6laB5AjHxlPnRpbgnI7HHid-SrntUKF2ooGxCWOFbeeDqk8XX6DFv6G4GdXkXEbyf69DNr7LQJphbhzKTRlRKJwjY_SvkXW9PhUsMLPui9mvjcrRJ7bJmjQL05KKjit_4UZHl9WLKHlqRaAxu2HvkhlQzSUo3EUYpzYpKKo5AcZIRSHRjaNbXTtCjyuWUc_1Sr4pm5mEz89CJv4kRScHnwtRIxIcDEjuzOWz_2coMAJJ0_DZotOk1PJPbUP5PQbzcvC-kemouDD9tu4uJNvk
+Content-Type: application/json
+
+{
+	"task": {
+		"id": 789,
+		"name": "Review API documentation",
+		"start": 1706000000,
+		"description": "Please review the latest API docs for accuracy"
+	},
+	"assigner": {
+		"name": "Mr. Fritz Teufel",
+		"email": "fritz.teufel@bosch.com"
+	},
+	"assignee": {
+		"name": "Gergely Dremák",
+		"email": "gergely089@gmail.com"
+	}
+}
+###
+
+POST http://localhost:4000/api/notifications/task-completed
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlcmdlbHkwODlAZ21haWwuY29tIiwibmFtZSI6IkdlcmdlbHkgRHJlbcOhayIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2NDQ5Mzc4OX0.NzJ0y-xCk4B0CTCdtwfdWR1AFjxezddxyw88_NVwGNA_2fPl4-zo4k0v65VgQdxhDb9cWUst9nwgfMoYZyaa5hZgayRmcAb18nHJ_zEfrO3Y2jguZTyCFBuZmBY3BPWP2ScvgT2gX36F2O0yOj8EuWFSuDBiIbmFxQlWIfPJUG12Zj28vU0eTvtBR7JGP1MA-lk39zdACHAhtotqUJklYtxfMP59IHlWehQdXyeJHUBZuK02RrZBTv6azyamXn_i3GKZmMBAfdSLpaNbdiNwh206GPRpXlLguWHZxqV6tXMgouH63OL5e1_Ogj76J3-Ikx9n5MxeRz4DDRIYul1nkmiNgG2ReCfhPXobsMSRC_EqmoKRiy4wvH2-z01NiZHpvbY15ZhnatlBXnODs6IULNX6laB5AjHxlPnRpbgnI7HHid-SrntUKF2ooGxCWOFbeeDqk8XX6DFv6G4GdXkXEbyf69DNr7LQJphbhzKTRlRKJwjY_SvkXW9PhUsMLPui9mvjcrRJ7bJmjQL05KKjit_4UZHl9WLKHlqRaAxu2HvkhlQzSUo3EUYpzYpKKo5AcZIRSHRjaNbXTtCjyuWUc_1Sr4pm5mEz89CJv4kRScHnwtRIxIcDEjuzOWz_2coMAJJ0_DZotOk1PJPbUP5PQbzcvC-kemouDD9tu4uJNvk
+Content-Type: application/json
+
+{
+	"project": {
+		"id": 1234,
+		"name": "Vonatkerék pumpálás"
+	},
+	"task": {
+		"id": 789,
+		"name": "Review API documentation"
+	},
+	"completer": {
+		"id": 91011,
+		"name": "Gergely Dremák",
+		"email": "gergely089@gmail.com"
+	},
+	"assigner": {
+		"id": 5678,
+		"name": "Mr. Fritz Teufel",
+		"email": "fritz.teufel@bosch.com"
+	}
+}
+
+###
+
+POST http://localhost:4000/api/notifications/task-permission-request
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlcmdlbHkwODlAZ21haWwuY29tIiwibmFtZSI6IkdlcmdlbHkgRHJlbcOhayIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2NDQ5Mzc4OX0.NzJ0y-xCk4B0CTCdtwfdWR1AFjxezddxyw88_NVwGNA_2fPl4-zo4k0v65VgQdxhDb9cWUst9nwgfMoYZyaa5hZgayRmcAb18nHJ_zEfrO3Y2jguZTyCFBuZmBY3BPWP2ScvgT2gX36F2O0yOj8EuWFSuDBiIbmFxQlWIfPJUG12Zj28vU0eTvtBR7JGP1MA-lk39zdACHAhtotqUJklYtxfMP59IHlWehQdXyeJHUBZuK02RrZBTv6azyamXn_i3GKZmMBAfdSLpaNbdiNwh206GPRpXlLguWHZxqV6tXMgouH63OL5e1_Ogj76J3-Ikx9n5MxeRz4DDRIYul1nkmiNgG2ReCfhPXobsMSRC_EqmoKRiy4wvH2-z01NiZHpvbY15ZhnatlBXnODs6IULNX6laB5AjHxlPnRpbgnI7HHid-SrntUKF2ooGxCWOFbeeDqk8XX6DFv6G4GdXkXEbyf69DNr7LQJphbhzKTRlRKJwjY_SvkXW9PhUsMLPui9mvjcrRJ7bJmjQL05KKjit_4UZHl9WLKHlqRaAxu2HvkhlQzSUo3EUYpzYpKKo5AcZIRSHRjaNbXTtCjyuWUc_1Sr4pm5mEz89CJv4kRScHnwtRIxIcDEjuzOWz_2coMAJJ0_DZotOk1PJPbUP5PQbzcvC-kemouDD9tu4uJNvk
+Content-Type: application/json
+
+{
+	"project": {
+		"id": 1234,
+		"name": "Vonatkerék pumpálás"
+	},
+	"task": {
+		"id": 789,
+		"name": "Deploy to production",
+		"description": "Need permission to deploy the latest release"
+	},
+	"requester": {
+		"id": 91011,
+		"name": "Gergely Dremák",
+		"email": "gergely089@gmail.com"
+	},
+	"approver": {
+		"id": 5678,
+		"name": "Mr. Fritz Teufel",
+		"email": "fritz.teufel@bosch.com"
+	}
+}
+
+###
+
+POST http://localhost:4000/api/discord/notify
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlcmdlbHkwODlAZ21haWwuY29tIiwibmFtZSI6IkdlcmdlbHkgRHJlbcOhayIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2NDQ5Mzc4OX0.NzJ0y-xCk4B0CTCdtwfdWR1AFjxezddxyw88_NVwGNA_2fPl4-zo4k0v65VgQdxhDb9cWUst9nwgfMoYZyaa5hZgayRmcAb18nHJ_zEfrO3Y2jguZTyCFBuZmBY3BPWP2ScvgT2gX36F2O0yOj8EuWFSuDBiIbmFxQlWIfPJUG12Zj28vU0eTvtBR7JGP1MA-lk39zdACHAhtotqUJklYtxfMP59IHlWehQdXyeJHUBZuK02RrZBTv6azyamXn_i3GKZmMBAfdSLpaNbdiNwh206GPRpXlLguWHZxqV6tXMgouH63OL5e1_Ogj76J3-Ikx9n5MxeRz4DDRIYul1nkmiNgG2ReCfhPXobsMSRC_EqmoKRiy4wvH2-z01NiZHpvbY15ZhnatlBXnODs6IULNX6laB5AjHxlPnRpbgnI7HHid-SrntUKF2ooGxCWOFbeeDqk8XX6DFv6G4GdXkXEbyf69DNr7LQJphbhzKTRlRKJwjY_SvkXW9PhUsMLPui9mvjcrRJ7bJmjQL05KKjit_4UZHl9WLKHlqRaAxu2HvkhlQzSUo3EUYpzYpKKo5AcZIRSHRjaNbXTtCjyuWUc_1Sr4pm5mEz89CJv4kRScHnwtRIxIcDEjuzOWz_2coMAJJ0_DZotOk1PJPbUP5PQbzcvC-kemouDD9tu4uJNvk
+Content-Type: application/json
+
+{
+	"channel_id": "1444905893748805727",
+	"content": "Hello from Comms Service! This is a test notification to the Discord channel."
+}
+
+###
+POST http://localhost:4000/api/discord/interactions
+Content-Type: application/json
+
+{
+	"type": 2,
+	"data": {
+		"name": "projects",
+		"options": []
+	},
+	"member": {
+		"user": {
+			"id": "214101395215876107"
+		}
+	}
+}

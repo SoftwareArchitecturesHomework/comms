@@ -3,19 +3,21 @@ defmodule Comms.Discord.Commands do
   Simple parser/handler for Discord text commands used by interactions endpoint.
 
   Supported commands:
-  - /projects -> replies with 'hello'
+  - /projects -> fetches projects for the user from core service
   - /task {project_id} {name} -> replies with a random task_id
   - /invite {task_id} {...users} -> replies with an acknowledgement
   """
 
-  @spec handle(String.t()) :: {:ok, String.t()} | {:error, term()}
-  def handle(content) when is_binary(content) do
+  @spec handle(String.t(), String.t() | nil) :: {:ok, String.t()} | {:error, term()}
+  def handle(content, user_id \\ nil)
+
+  def handle(content, user_id) when is_binary(content) do
     content
     |> String.trim()
     |> String.split(~r/\s+/, parts: 2)
     |> case do
       ["/projects"] ->
-        {:ok, "hello"}
+        handle_projects(user_id)
 
       ["/task", rest] ->
         handle_task(rest)
@@ -28,6 +30,52 @@ defmodule Comms.Discord.Commands do
 
       _ ->
         {:error, :invalid_content}
+    end
+  end
+
+  defp handle_projects(nil) do
+    {:ok, "Error: Unable to identify user"}
+  end
+
+  defp handle_projects(user_id) do
+    core_service_url = Application.get_env(:comms, :core_service_url)
+
+    if is_nil(core_service_url) or core_service_url == "" do
+      {:ok, "Error: Core service not configured"}
+    else
+      case fetch_user_projects(core_service_url, user_id) do
+        {:ok, []} ->
+          {:ok, "You have no projects assigned."}
+
+        {:ok, projects} ->
+          project_list =
+            projects
+            |> Enum.map(fn proj ->
+              "• #{proj["name"]} (ID: #{proj["id"]})"
+            end)
+            |> Enum.join("\n")
+
+          {:ok, "Your projects:\n#{project_list}"}
+
+        {:error, reason} ->
+          {:ok, "Error fetching projects: #{inspect(reason)}"}
+      end
+    end
+  end
+
+  defp fetch_user_projects(base_url, user_id) do
+    url = "#{base_url}/api/discord/projects"
+    body = %{"id" => user_id}
+
+    case Req.post(url: url, json: body) do
+      {:ok, %Req.Response{status: 200, body: projects}} when is_list(projects) ->
+        {:ok, projects}
+
+      {:ok, %Req.Response{status: status, body: body}} ->
+        {:error, {:http_error, status, body}}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 

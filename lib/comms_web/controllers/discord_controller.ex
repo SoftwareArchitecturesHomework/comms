@@ -63,15 +63,23 @@ defmodule CommsWeb.DiscordController do
   # and never reach this controller, matching Discord's JavaScript middleware behavior.
 
   # Interactions endpoint: handle slash commands (type 2)
-  def interactions(conn, %{"type" => 2, "data" => data}) do
+  def interactions(conn, %{"type" => 2, "data" => data} = params) do
     name = data["name"] || Map.get(data, :name)
     options = data["options"] || Map.get(data, :options) || []
     content = build_content_from_command(name, options)
 
-    case Commands.handle(content) do
+    # Extract user ID from interaction
+    # Discord sends user info in either "member.user.id" or "user.id" depending on context
+    user_id =
+      get_in(params, ["user", "id"]) ||
+        get_in(params, ["member", "user", "id"]) ||
+        get_in(params, [Access.key(:user), Access.key(:id)]) ||
+        get_in(params, [Access.key(:member), Access.key(:user), Access.key(:id)])
+
+    case Commands.handle(content, user_id) do
       {:ok, response_text} ->
         # Respond with CHANNEL_MESSAGE_WITH_SOURCE (type 4)
-        json(conn, %{type: 4, data: %{content: response_text}})
+        json(conn, %{type: 4, data: %{content: response_text, flags: 64}})
 
       {:error, reason} ->
         # Respond with an error message visible to the user
@@ -79,7 +87,8 @@ defmodule CommsWeb.DiscordController do
           type: 4,
           data: %{
             content: "Error: #{inspect(reason)}",
-            flags: 64  # EPHEMERAL flag - only visible to user
+            # EPHEMERAL flag - only visible to user
+            flags: 64
           }
         })
     end
