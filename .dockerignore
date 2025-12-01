@@ -1,0 +1,58 @@
+# Elixir build artifacts
+/_build
+/deps
+*.ez
+
+# Generate on crash by the VM
+erl_crash.dump
+
+# Local development
+.env
+.env.*
+!.env.example
+
+# Static artifacts - you may want to remove these if building assets in Docker
+/priv/static/assets/
+
+# Since we include lib and priv, we may want the built-in Phoenix
+# endpoint cache. You can always use `mix phx.digest` to gzip them first.
+/priv/static/cache_manifest.json
+
+# Editor/IDE files
+.elixir_ls/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+/cover
+/test
+
+# Documentation
+/doc
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# CI/CD
+.github/
+
+# Misc
+*.log
+README.md
+TODO.md
+AGENTS.md
+docs/
+*.http

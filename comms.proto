@@ -12,7 +12,6 @@ enum TaskType {
 enum Role {
 	EMPLOYEE = 0;
 	MANAGER = 1;
-	ADMIN = 2;
 }
 
 message User {

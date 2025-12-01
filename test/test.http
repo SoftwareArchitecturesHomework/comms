@@ -53,10 +53,10 @@ Content-Type: application/json
 		"name": "Bob Manager",
 		"email": "manager@company.com"
 	},
-	"member": {
+	"members": [{
 		"name": "Gergely Dremák",
 		"email": "gergely089@gmail.com"
-	},
+	}],
 	"summary": "Az összes vonatkerék sikeresen fel lett pumpálva. UwU very hard vonatkerék!"
 }
 

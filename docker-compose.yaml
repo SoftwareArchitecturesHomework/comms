@@ -1,0 +1,49 @@
+services:
+  comms:
+    image: wingsmc/work-planner-comms:latest
+    ports:
+      - "${PORT:-4000}:${PORT:-4000}"
+    environment:
+      # Runtime configuration
+      - PHX_HOST=${PHX_HOST:-localhost}
+      - PORT=${PORT:-4000}
+      - PHX_SERVER=true
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+
+      # JWT Configuration
+      - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
+      - JWT_DEBUG=${JWT_DEBUG:-0}
+
+      # Discord Configuration
+      - DISCORD_APP_ID=${DISCORD_APP_ID}
+      - DISCORD_PUBLIC_KEY=${DISCORD_PUBLIC_KEY}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - DISCORD_SIGNATURE_DISABLE=${DISCORD_SIGNATURE_DISABLE:-0}
+
+      # Email Configuration
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_SSL=${SMTP_SSL:-false}
+      - SMTP_TLS_VERIFY=${SMTP_TLS_VERIFY:-false}
+      - SMTP_CACERTFILE=${SMTP_CACERTFILE}
+
+      # Optional: Core Service URL
+      - CORE_SERVICE_HTTP=${CORE_SERVICE_HTTP}
+
+      # Optional: DNS Cluster
+      - DNS_CLUSTER_QUERY=${DNS_CLUSTER_QUERY}
+
+    env_file:
+      - .env
+
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT:-4000}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

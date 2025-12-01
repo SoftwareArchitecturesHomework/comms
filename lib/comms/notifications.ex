@@ -6,6 +6,7 @@ defmodule Comms.Notifications do
   Expects maps shaped like the proto messages converted from JSON payloads.
   """
 
+  require Logger
   alias Comms.Mailer
   alias Swoosh.Email
 
@@ -13,11 +14,19 @@ defmodule Comms.Notifications do
   defp application_url, do: Application.get_env(:comms, :core_service_url)
 
   defp layout_path do
-    Path.join([File.cwd!(), Application.get_env(:comms, :email_layout_path)])
+    # Try release path first (for production), fall back to dev path
+    release_path = Application.app_dir(:comms, "priv/templates/email/layout.html.eex")
+    dev_path = Path.join([File.cwd!(), Application.get_env(:comms, :email_layout_path)])
+
+    if File.exists?(release_path), do: release_path, else: dev_path
   end
 
   defp templates_path do
-    Path.join([File.cwd!(), Application.get_env(:comms, :email_templates_path)])
+    # Try release path first (for production), fall back to dev path
+    release_path = Application.app_dir(:comms, "priv/templates/email")
+    dev_path = Path.join([File.cwd!(), Application.get_env(:comms, :email_templates_path)])
+
+    if File.exists?(release_path), do: release_path, else: dev_path
   end
 
   # Public API ---------------------------------------------------------------
@@ -173,7 +182,21 @@ defmodule Comms.Notifications do
       |> Email.html_body(html)
       |> attach_logo()
 
-    Mailer.deliver(email)
+    case Mailer.deliver(email) do
+      {:ok, response} ->
+        Logger.info(
+          "Email delivered: to=#{to_email} subject=\"#{subject}\" response=#{inspect(response)}"
+        )
+
+        {:ok, response}
+
+      {:error, reason} ->
+        Logger.error(
+          "Email delivery failed: to=#{to_email} subject=\"#{subject}\" error=#{inspect(reason)}"
+        )
+
+        {:error, reason}
+    end
   end
 
   defp attach_logo(email) do
