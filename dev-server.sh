@@ -37,6 +37,12 @@ echo "   Server: ${SMTP_SERVER:-not set}"
 echo "   Username: ${SMTP_USERNAME:-not set}"
 echo "   Port: ${SMTP_PORT:-587}"
 
+echo "" 
+echo "🔗 Discord Configuration:"
+require_env DISCORD_APP_ID "Set Discord application ID (DISCORD_APP_ID)."
+require_env DISCORD_PUBLIC_KEY "Set Discord public key (DISCORD_PUBLIC_KEY)."
+require_env DISCORD_BOT_TOKEN "Set Discord bot token (DISCORD_BOT_TOKEN)."
+
 echo ""
 echo "🧩 Runtime Configuration:"
 require_env PHX_HOST "Set Phoenix host (PHX_HOST)."
@@ -57,5 +63,8 @@ echo ""
 
 # Set PHX_SERVER if not already set
 export PHX_SERVER=${PHX_SERVER:-true}
+
+# exec mix phx.server
+mix discord.install_commands
 
 exec mix phx.server

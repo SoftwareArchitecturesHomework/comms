@@ -18,3 +18,6 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Disable Discord signature verification in tests
+config :comms, :discord_signature_disable, true

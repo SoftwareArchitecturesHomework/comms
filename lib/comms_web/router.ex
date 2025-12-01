@@ -6,6 +6,12 @@ defmodule CommsWeb.Router do
     plug CommsWeb.Plugs.VerifyJWT
   end
 
+  pipeline :discord do
+    plug :accepts, ["json"]
+    plug Plug.Parsers, parsers: [:json], json_decoder: Jason
+    plug CommsWeb.Plugs.VerifyDiscordSignature
+  end
+
   scope "/api", CommsWeb do
     pipe_through :api
 
@@ -19,6 +25,15 @@ defmodule CommsWeb.Router do
     post "/notifications/task-permission-request",
          NotificationController,
          :task_permission_request
+
+    # Discord integration
+    post "/discord/notify", DiscordController, :notify
+  end
+
+  scope "/api", CommsWeb do
+    pipe_through :discord
+
+    post "/discord/interactions", DiscordController, :interactions
   end
 
   scope "/", CommsWeb do

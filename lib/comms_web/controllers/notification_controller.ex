@@ -24,15 +24,8 @@ defmodule CommsWeb.NotificationController do
     do: generic(conn, fn -> Notifications.send_task_permission_request_notification(params) end)
 
   defp generic(conn, fun) do
-    case fun.() do
-      {:ok, meta} ->
-        json(conn, %{success: true, meta: meta})
-
-      {:error, reason} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> json(%{success: false, error: inspect(reason)})
-    end
+    {:ok, meta} = fun.()
+    json(conn, %{success: true, meta: meta})
   rescue
     e -> conn |> put_status(:bad_request) |> json(%{success: false, error: Exception.message(e)})
   end

@@ -44,6 +44,28 @@ export SMTP_CACERTFILE=/etc/ssl/certs/ca-certificates.crt
 export SMTP_TLS_VERIFY=false
 ```
 
+### Discord Configuration
+
+To receive Discord interactions (slash commands, buttons, etc.):
+
+1. Create a Discord application at [Discord Developer Portal](https://discord.com/developers/applications)
+2. Copy the Public Key from the **General Information** tab
+3. Copy the Bot Token from the **Bot** tab
+4. Set the environment variables:
+
+```bash
+export DISCORD_PUBLIC_KEY=your-hex-public-key
+export DISCORD_BOT_TOKEN=Bot_your-bot-token
+```
+
+For local development without signature verification (INSECURE):
+
+```bash
+export DISCORD_SIGNATURE_DISABLE=1
+```
+
+See [DISCORD_SETUP.md](./DISCORD_SETUP.md) for detailed setup instructions.
+
 ### Optional Configuration
 
 ```bash

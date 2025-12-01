@@ -9,9 +9,16 @@ defmodule Comms.Notifications do
   alias Comms.Mailer
   alias Swoosh.Email
 
-  # existing layout
-  @layout_path Path.join([File.cwd!(), "lib/comms_web/templates/email/layout.html.eex"])
-  @templates_path Path.join([File.cwd!(), "lib/comms_web/templates/email"])
+  defp from_email, do: Application.get_env(:comms, :smtp_from_email, "noreply@example.com")
+  defp application_url, do: Application.get_env(:comms, :core_service_url)
+
+  defp layout_path do
+    Path.join([File.cwd!(), Application.get_env(:comms, :email_layout_path)])
+  end
+
+  defp templates_path do
+    Path.join([File.cwd!(), Application.get_env(:comms, :email_templates_path)])
+  end
 
   # Public API ---------------------------------------------------------------
   def send_user_added_to_project_notification(%{
@@ -184,13 +191,11 @@ defmodule Comms.Notifications do
   end
 
   defp render_with_layout(template, assigns) do
-    template_path = Path.join(@templates_path, template)
+    template_path = Path.join(templates_path(), template)
     inner = EEx.eval_file(template_path, [assigns: assigns], trim: true)
     layout_assigns = Map.merge(assigns, %{inner_content: inner})
-    EEx.eval_file(@layout_path, [assigns: layout_assigns], trim: true)
+    EEx.eval_file(layout_path(), [assigns: layout_assigns], trim: true)
   end
-
-  defp from_email, do: System.get_env("SMTP_USERNAME") || "noreply@example.com"
 
   defp normalize_user(%{"id" => id, "name" => name, "email" => email}) do
     %{id: id, name: name, email: email}
@@ -217,6 +222,4 @@ defmodule Comms.Notifications do
   end
 
   defp normalize_task_details(map), do: map
-
-  defp application_url(), do: System.get_env("CORE_SERVICE_HTTP")
 end

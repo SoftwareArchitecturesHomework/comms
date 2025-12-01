@@ -38,7 +38,7 @@ defmodule CommsWeb.Plugs.VerifyJWT do
   end
 
   defp verify_token(conn, token) do
-    pem = System.get_env("JWT_PUBLIC_KEY") |> normalize_pem()
+    pem = Application.get_env(:comms, :jwt_public_key) |> normalize_pem()
 
     if is_nil(pem) or pem == "" do
       Logger.warning("JWT_PUBLIC_KEY not configured")
@@ -76,7 +76,7 @@ defmodule CommsWeb.Plugs.VerifyJWT do
   end
 
   defp debug_log(token, result) do
-    if System.get_env("JWT_DEBUG") == "1" do
+    if Application.get_env(:comms, :jwt_debug, false) do
       with [header_b64, _payload_b64 | _] <- String.split(token, "."),
            {:ok, header_json} <- base64url_decode_json(header_b64) do
         Logger.debug("JWT header: #{inspect(header_json)} result=#{inspect(result)}")

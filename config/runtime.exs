@@ -15,6 +15,35 @@ if jwt_public_key = System.get_env("JWT_PUBLIC_KEY") do
   config :comms, :jwt_public_key, jwt_public_key
 end
 
+config :comms, :jwt_debug, System.get_env("JWT_DEBUG") == "1"
+
+# ## Discord Configuration
+if discord_public_key = System.get_env("DISCORD_PUBLIC_KEY") do
+  config :comms, :discord_public_key, discord_public_key
+end
+
+if discord_bot_token = System.get_env("DISCORD_BOT_TOKEN") do
+  config :comms, :discord_bot_token, discord_bot_token
+end
+
+if discord_app_id = System.get_env("DISCORD_APP_ID") do
+  config :comms, :discord_app_id, discord_app_id
+end
+
+# Only set signature disable in runtime if not already configured (e.g., by test.exs)
+if config_env() != :test do
+  config :comms, :discord_signature_disable, System.get_env("DISCORD_SIGNATURE_DISABLE") == "1"
+end
+
+# ## Core Service Configuration
+if core_service_url = System.get_env("CORE_SERVICE_HTTP") do
+  config :comms, :core_service_url, core_service_url
+end
+
+if smtp_username = System.get_env("SMTP_USERNAME") do
+  config :comms, :smtp_from_email, smtp_username
+end
+
 # ## Email Configuration
 #
 # Configure SMTP settings from environment variables for all environments
