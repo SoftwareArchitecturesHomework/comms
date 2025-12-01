@@ -75,7 +75,7 @@
     <div class="container">
       <div class="card">
         <div class="header">
-          <img src="<%= assigns[:base_url] %>/favicon-dark.png" alt="Logo" width="28" height="28" style="margin-right: 12px;" />
+          <img alt="Logo" style="margin-right: 12px; width: 28px; height: 28px;" src="cid:logo" />
           <div class="title"><%= assigns[:title] || "Notification" %></div>
         </div>
         <div class="content">

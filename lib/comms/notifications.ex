@@ -160,8 +160,27 @@ defmodule Comms.Notifications do
       |> Email.from({"Comms", from_email()})
       |> Email.subject(subject)
       |> Email.html_body(html)
+      |> attach_logo()
 
     Mailer.deliver(email)
+  end
+
+  defp attach_logo(email) do
+    path = Path.join([File.cwd!(), "priv/static/images/logo.png"]) |> Path.expand()
+
+    if File.exists?(path) do
+      attachment =
+        Swoosh.Attachment.new(path,
+          filename: "logo.png",
+          cid: "logo",
+          content_type: "image/png",
+          type: :inline
+        )
+
+      Email.attachment(email, attachment)
+    else
+      email
+    end
   end
 
   defp render_with_layout(template, assigns) do
