@@ -68,25 +68,31 @@ defmodule Comms.Notifications do
         %{
           "project" => project,
           "manager" => manager,
-          "member" => member
+          "members" => members
         } = body
       ) do
-    assigns = %{
+
+    normalized_members =
+      Enum.map(members, &normalize_user/1)
+    assigns_base = %{
       view_template: "project_completion.html.eex",
       title: "Project Completed",
       project: normalize_project(project),
       manager: normalize_user(manager),
-      member: normalize_user(member),
       summary: Map.get(body, "summary"),
       action_url: application_url() <> "/projects/#{project["id"]}"
     }
 
-    deliver_single(assigns.member.email,
-      subject: "#{assigns.project.name} completed",
-      assigns: assigns
-    )
+    Enum.each(normalized_members, fn member ->
+      assigns = Map.put(assigns_base, :member, member)
 
-    {:ok, %{sent: 1}}
+      deliver_single(member.email,
+        subject: "Project Completed: #{assigns.project.name}",
+        assigns: assigns
+      )
+    end)
+
+    {:ok, %{sent: length(normalized_members)}}
   end
 
   def send_task_assignment_notification(%{
@@ -113,49 +119,46 @@ defmodule Comms.Notifications do
 
   def send_task_completion_notification(%{
         "task" => task,
-        "assigner" => assigner,
-        "assignee" => assignees
+        "assignee" => assignee
       }) do
     assigns = %{
-      task: normalize_task(task),
-      assigner: normalize_user(assigner),
-      assignees: Enum.map(assignees, &normalize_user/1),
+      view_template: "task_completion.html.eex",
       title: "Task Completed",
-      view_template: "task_completion.html.eex"
+      task: normalize_task_completion(task),
+      assignee: normalize_user(assignee),
+      action_url: application_url() <> "/tasks/#{task["id"]}"
     }
 
-    recipients = [assigns.assigner.email | Enum.map(assigns.assignees, & &1.email)] |> Enum.uniq()
+    deliver_single(assigns.assignee.email,
+      subject: "Completed: #{assigns.task.name}",
+      assigns: assigns
+    )
 
-    Enum.each(recipients, fn email ->
-      deliver_single(email, subject: "Completed: #{assigns.task.details.name}", assigns: assigns)
-    end)
-
-    {:ok, %{sent: length(recipients)}}
+    {:ok, %{sent: 1}}
   end
 
-  def send_task_permission_request_notification(%{
+  def send_vacation_request_notification(%{
         "task" => task,
         "assigner" => assigner,
-        "assignee" => assignees
+        "assignee" => assignee
       }) do
-    assigns_base = %{
-      task: normalize_task(task),
+    assigns = %{
+      view_template: "vacation_request.html.eex",
+      title: "Vacation Request",
+      task: normalize_vacation_task(task),
       assigner: normalize_user(assigner),
-      assignees: Enum.map(assignees, &normalize_user/1),
-      title: "Task Permission Request",
-      view_template: "task_permission_request.html.eex"
+      assignee: normalize_user(assignee),
+      approve_url: application_url() <> "/approvals/?action=approve:#{task["id"]}",
+      deny_url: application_url() <> "/approvals/?action=reject:#{task["id"]}",
+      action_url: application_url() <> "/tasks/#{task["id"]}"
     }
 
-    Enum.each(assigns_base.assignees, fn user ->
-      assigns = Map.put(assigns_base, :recipient, user)
+    deliver_single(assigns.assignee.email,
+      subject: "Permission requested: #{assigns.task.name}",
+      assigns: assigns
+    )
 
-      deliver_single(user.email,
-        subject: "Permission requested: #{assigns_base.task.details.name}",
-        assigns: assigns
-      )
-    end)
-
-    {:ok, %{sent: length(assigns_base.assignees)}}
+    {:ok, %{sent: 1}}
   end
 
   # Helpers ------------------------------------------------------------------
@@ -165,7 +168,7 @@ defmodule Comms.Notifications do
     email =
       Email.new()
       |> Email.to(to_email)
-      |> Email.from({"Comms", from_email()})
+      |> Email.from({"WorkPlanner", from_email()})
       |> Email.subject(subject)
       |> Email.html_body(html)
       |> attach_logo()
@@ -204,9 +207,24 @@ defmodule Comms.Notifications do
 
   defp normalize_project(%{"id" => id, "name" => name}), do: %{id: id, name: name}
 
+  defp normalize_task_completion(%{"id" => id, "name" => name} = map) do
+    description = Map.get(map, "description")
+    %{id: id, name: name, description: description}
+  end
+
   defp normalize_task(%{"id" => id, "name" => name, "start" => start} = map) do
     endDate = Map.get(map, "end")
     description = Map.get(map, "description")
+    %{id: id, name: name, start: start, end: endDate, description: description}
+  end
+
+  defp normalize_vacation_task(%{
+         "id" => id,
+         "name" => name,
+         "start" => start,
+         "end" => endDate,
+         "description" => description
+       }) do
     %{id: id, name: name, start: start, end: endDate, description: description}
   end
 end

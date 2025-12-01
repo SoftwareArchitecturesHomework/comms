@@ -1,0 +1,44 @@
+<%# Assigns expected:
+# task: %{id: integer, name: String, description: String,start:Integer,end:Integer}
+# assigner: %{name: String, email: String}
+# assignee: %{name: String, email: String} (request target)
+# action_url: String
+# approve_url: String (CTA)
+# deny_url: String (CTA)
+%>
+<div>
+  <p class="muted">Hello,</p>
+  <p>
+    <strong><%= @assigner.name %></strong> requested permission for vacation (<strong><%= @task.name %></strong>).
+  </p>
+
+  <div class="divider"></div>
+
+  <p class="muted">Reason / Notes</p>
+  <p><%= @task.description %></p>
+
+  <p class="muted">Date</p>
+  <p>
+    <%= DateTime.from_unix!(@task.start) |> DateTime.to_string() %>
+    to
+    <%= DateTime.from_unix!(@task.end) |> DateTime.to_string() %>
+  </p>
+
+  <div class="divider"></div>
+
+  <div style="margin-top: 16px; text-align: center;">
+    <a href="<%= @action_url %>">
+      <div class="btn" style="width:100%;">View Task</div>
+    </a>
+  </div>
+
+  <div style="margin-top: 16px;">
+    <a href="<%= @approve_url %>" style="width:48%;display:inline-block;">
+      <div class="btn btn_green" style="width:100%;">Approve</div>
+    </a>
+    <a href="<%= @deny_url %>" style="width:48%;display:inline-block;float:right;">
+      <div class="btn btn_red" style="width:100%;">Reject</div>
+    </a>
+  </div>
+
+</div>

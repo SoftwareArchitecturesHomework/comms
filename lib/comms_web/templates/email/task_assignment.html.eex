@@ -31,6 +31,8 @@
     </a>
   </div>
 
+  <div class="divider"></div>
+
   <p style="margin-top: 16px;" class="muted">
     If you cannot take this task, please inform <a href="mailto:<%= @assigner.email %>"><%= @assigner.name %></a>.
   </p>

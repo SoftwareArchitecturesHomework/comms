@@ -20,8 +20,8 @@ defmodule CommsWeb.NotificationController do
   def task_completed(conn, params),
     do: generic(conn, fn -> Notifications.send_task_completion_notification(params) end)
 
-  def task_permission_request(conn, params),
-    do: generic(conn, fn -> Notifications.send_task_permission_request_notification(params) end)
+  def vacation_request(conn, params),
+    do: generic(conn, fn -> Notifications.send_vacation_request_notification(params) end)
 
   defp generic(conn, fun) do
     {:ok, meta} = fun.()

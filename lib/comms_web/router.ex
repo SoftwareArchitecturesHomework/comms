@@ -21,10 +21,7 @@ defmodule CommsWeb.Router do
     post "/notifications/project-completed", NotificationController, :project_completed
     post "/notifications/task-assigned", NotificationController, :task_assigned
     post "/notifications/task-completed", NotificationController, :task_completed
-
-    post "/notifications/task-permission-request",
-         NotificationController,
-         :task_permission_request
+    post "/notifications/vacation-request", NotificationController, :vacation_request
 
     # Discord integration
     post "/discord/notify", DiscordController, :notify

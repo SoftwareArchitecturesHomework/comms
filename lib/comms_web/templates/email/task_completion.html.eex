@@ -1,37 +1,25 @@
 <%# Assigns expected:
-# task: %{id: integer, details: %{name: String, description: String}}
-# assigner: %{id: integer, name: String, email: String}
-# assignees: [%{id: integer, name: String, email: String}]
-# action_url: String (optional CTA to view task)
+# task: %{id: integer, name: String, description: String}
+# assignee: %{name: String, email: String}
+# action_url: String
 %>
 <div>
-  <p class="muted">Hello,</p>
+  <p class="muted">Hello <%= @assignee.name %>,</p>
   <p>
-    The task <strong><%= @task.details.name %></strong> has been marked as
-    <span class="tag">completed</span>. 🎉
+    The task <strong><%= @task.name %></strong> has been marked as
+    <span class="tag tag_green">completed</span>. 🎉
   </p>
 
   <div class="divider"></div>
-  <p class="muted">Participants</p>
-  <ul class="list">
-    <li><strong>Assigner:</strong> <%= @assigner.name %> (<%= @assigner.email %>)</li>
-    <li><strong>Assignees:</strong>
-      <ul class="list">
-        <%= for user <- @assignees do %>
-          <li><%= user.name %> (<%= user.email %>)</li>
-        <% end %>
-      </ul>
-    </li>
-  </ul>
 
-  <%= if @task.details.description && @task.details.description != "" do %>
+  <%= if @task.description && @task.description != "" do %>
     <p class="muted">Description</p>
-    <p><%= @task.details.description %></p>
+    <p><%= @task.description %></p>
   <% end %>
 
-  <div style="margin-top: 16px;">
-    <%= if assigns[:action_url] do %>
-      <a href="<%= @action_url %>" class="btn">View Task</a>
-    <% end %>
+  <div style="margin-top: 16px; text-align: center;">
+    <a href="<%= @action_url %>">
+      <div class="btn">View Task</div>
+    </a>
   </div>
 </div>

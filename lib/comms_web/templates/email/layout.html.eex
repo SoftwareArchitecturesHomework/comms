@@ -39,27 +39,25 @@
       .divider { height: 1px; background-color: #1f2937; margin: 16px 0; }
       .btn {
         display: inline-block;
-        background-color: #05df72;
-        color: #0f172b !important;
+        background-color: #0f172b;
+        color: #05df72;
+        border: 2px solid currentColor;
         text-decoration: none;
         font-weight: 600;
         padding: 10px 16px;
         border-radius: 8px;
         text-align: center;
+        box-sizing: border-box;
+      }
+      .btn_green {
+        background-color: #05df7222;
+        color: #05df72 !important;
+        border-color: #05df72;
       }
       .btn_red {
-        background-color: #ef4444;
-        color: #ffffff !important;
-      }
-      .btn-outline {
-        display: inline-block;
-        background-color: transparent;
-        color: #05df72 !important;
-        border: 1px solid #05df72;
-        text-decoration: none;
-        font-weight: 600;
-        padding: 10px 16px;
-        border-radius: 8px;
+        background-color: #ef444422;
+        color: #ef4444 !important;
+        border-color: #ef4444;
       }
       .tag {
         display: inline-block;
