@@ -18,7 +18,9 @@
     <%= if @task.description && @task.description != "" do %>
       <li><strong>Description:</strong> <%= @task.description %></li>
     <% end %>
-    <li><strong>Start:</strong> <%= DateTime.from_unix!(@task.start) |> DateTime.to_string() %></li>
+    <%= if @task.start do %>
+      <li><strong>Start:</strong> <%= DateTime.from_unix!(@task.start) |> DateTime.to_string() %></li>
+    <% end %>
     <%= if @task.end do %>
       <li><strong>End:</strong> <%= DateTime.from_unix!(@task.end) |> DateTime.to_string() %></li>
     <% end %>

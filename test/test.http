@@ -108,8 +108,6 @@ Content-Type: application/json
 {
 	"task": {
 		"id": 1580,
-		"name": "Vacactioning in Hawaii",
-		"description": "Requesting annual leave for a tropical vacation.",
 		"start": 1706000000,
 		"end": 1706604800
 	},

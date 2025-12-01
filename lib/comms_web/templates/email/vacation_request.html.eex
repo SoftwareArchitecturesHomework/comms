@@ -1,5 +1,5 @@
 <%# Assigns expected:
-# task: %{id: integer, name: String, description: String,start:Integer,end:Integer}
+# task: %{id: integer,start:Integer,end:Integer}
 # assigner: %{name: String, email: String}
 # assignee: %{name: String, email: String} (request target)
 # action_url: String
@@ -9,13 +9,10 @@
 <div>
   <p class="muted">Hello,</p>
   <p>
-    <strong><%= @assigner.name %></strong> requested permission for vacation (<strong><%= @task.name %></strong>).
+    <strong><%= @assigner.name %></strong> requested permission for vacation.
   </p>
 
   <div class="divider"></div>
-
-  <p class="muted">Reason / Notes</p>
-  <p><%= @task.description %></p>
 
   <p class="muted">Date</p>
   <p>

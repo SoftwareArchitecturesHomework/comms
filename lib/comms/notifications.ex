@@ -71,9 +71,9 @@ defmodule Comms.Notifications do
           "members" => members
         } = body
       ) do
-
     normalized_members =
       Enum.map(members, &normalize_user/1)
+
     assigns_base = %{
       view_template: "project_completion.html.eex",
       title: "Project Completed",
@@ -154,7 +154,7 @@ defmodule Comms.Notifications do
     }
 
     deliver_single(assigns.assignee.email,
-      subject: "Permission requested: #{assigns.task.name}",
+      subject: "Permission requested: Vacation from #{assigns.task.start} to #{assigns.task.end}",
       assigns: assigns
     )
 
@@ -212,19 +212,18 @@ defmodule Comms.Notifications do
     %{id: id, name: name, description: description}
   end
 
-  defp normalize_task(%{"id" => id, "name" => name, "start" => start} = map) do
+  defp normalize_task(%{"id" => id, "name" => name} = map) do
     endDate = Map.get(map, "end")
+    start = Map.get(map, "start")
     description = Map.get(map, "description")
     %{id: id, name: name, start: start, end: endDate, description: description}
   end
 
   defp normalize_vacation_task(%{
          "id" => id,
-         "name" => name,
          "start" => start,
-         "end" => endDate,
-         "description" => description
+         "end" => endDate
        }) do
-    %{id: id, name: name, start: start, end: endDate, description: description}
+    %{id: id, start: start, end: endDate}
   end
 end
