@@ -10,5 +10,25 @@
     "**/.elixir_ls": true,
     "**/_build": true,
     "**/deps": true
-  }
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#754bce",
+    "activityBar.background": "#754bce",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#d68c69",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#754bce",
+    "statusBar.background": "#5b31b5",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#754bce",
+    "statusBarItem.remoteBackground": "#5b31b5",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#5b31b5",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#5b31b599",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#5b31b5"
 }

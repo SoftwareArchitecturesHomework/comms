@@ -1,17 +1,12 @@
 #!/usr/bin/env bash
 
-# Development server startup script
 # This script checks for required environment variables and starts the Phoenix server
-
 set -e
-
-echo "🔍 Loading environment (.env) and checking configuration..."
 
 # Load .env if present
 if [ -f ".env" ]; then
   echo "📦 Found .env file — exporting variables"
   set -a
-  # shellcheck disable=SC1091
   source .env
   set +a
 else
@@ -53,12 +48,6 @@ echo "   PHX_SERVER: ${PHX_SERVER:-true}"
 if [ -n "$MISSING_ENV" ]; then
   echo ""
   echo "❗ Please set the missing required environment variables before starting the server."
-  exit 1
-fi
-
-if [ -n "$MISSING_ENV" ]; then
-  echo ""
-  echo "🚫 Startup aborted due to missing required environment variables."
   exit 1
 fi
 
