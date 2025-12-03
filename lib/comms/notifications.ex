@@ -10,24 +10,10 @@ defmodule Comms.Notifications do
   alias Comms.Mailer
   alias Swoosh.Email
 
-  defp from_email, do: Application.get_env(:comms, :smtp_from_email, "noreply@example.com")
+  defp from_email, do: Application.get_env(:comms, :smtp_from_email)
   defp application_url, do: Application.get_env(:comms, :core_service_url)
-
-  defp layout_path do
-    # Try release path first (for production), fall back to dev path
-    release_path = Application.app_dir(:comms, "priv/templates/email/layout.html.eex")
-    dev_path = Path.join([File.cwd!(), Application.get_env(:comms, :email_layout_path)])
-
-    if File.exists?(release_path), do: release_path, else: dev_path
-  end
-
-  defp templates_path do
-    # Try release path first (for production), fall back to dev path
-    release_path = Application.app_dir(:comms, "priv/templates/email")
-    dev_path = Path.join([File.cwd!(), Application.get_env(:comms, :email_templates_path)])
-
-    if File.exists?(release_path), do: release_path, else: dev_path
-  end
+  defp layout_path, do: Application.get_env(:comms, :email_layout_path)
+  defp templates_path, do: Application.get_env(:comms, :email_templates_path)
 
   # Public API ---------------------------------------------------------------
   def send_user_added_to_project_notification(%{
@@ -224,10 +210,7 @@ defmodule Comms.Notifications do
     EEx.eval_file(layout_path(), [assigns: layout_assigns], trim: true)
   end
 
-  defp normalize_user(%{"name" => name, "email" => email}) do
-    %{name: name, email: email}
-  end
-
+  defp normalize_user(%{"name" => name, "email" => email}), do: %{name: name, email: email}
   defp normalize_project(%{"id" => id, "name" => name}), do: %{id: id, name: name}
 
   defp normalize_task_completion(%{"id" => id, "name" => name} = map) do

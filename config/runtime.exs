@@ -46,6 +46,28 @@ end
 
 # ## Email Configuration
 #
+# Compute email template paths at runtime to support both dev and release environments
+layout_path =
+  try do
+    path = Application.app_dir(:comms, "priv/templates/email/layout.html.eex")
+    if File.exists?(path), do: path, else: "priv/templates/email/layout.html.eex"
+  rescue
+    _ -> "priv/templates/email/layout.html.eex"
+  end
+
+templates_path =
+  try do
+    path = Application.app_dir(:comms, "priv/templates/email")
+    if File.exists?(path), do: path, else: "priv/templates/email"
+  rescue
+    _ -> "priv/templates/email"
+  end
+
+config :comms, :email_layout_path, layout_path
+config :comms, :email_templates_path, templates_path
+
+# ## SMTP Configuration
+#
 # Configure SMTP settings from environment variables for all environments
 if smtp_server = System.get_env("SMTP_SERVER") do
   ssl = System.get_env("SMTP_SSL") == "true"

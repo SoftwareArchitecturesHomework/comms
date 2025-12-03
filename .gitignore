@@ -39,3 +39,5 @@ npm-debug.log
 *.key*
 
 .elixir_ls/
+rel/
+*.beam
