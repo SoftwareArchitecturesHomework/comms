@@ -12,16 +12,14 @@ FROM ${BUILDER_IMAGE} AS builder
 
 # Install build dependencies
 RUN apt-get update -y && apt-get install -y \
-    build-essential \
-    git \
+    libssl-dev \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Prepare build directory
 WORKDIR /app
 
-# Install hex + rebar
-RUN mix local.hex --force && \
-    mix local.rebar --force
+# Install hex
+RUN mix local.hex --force
 
 # Set build ENV
 ENV MIX_ENV="prod"
@@ -41,10 +39,6 @@ RUN mix deps.compile
 COPY priv priv
 COPY lib lib
 
-# Copy email templates to priv for release
-RUN mkdir -p priv/templates/email && \
-    cp -r lib/comms_web/templates/email/* priv/templates/email/
-
 # Compile the release (without runtime.exs to avoid baking in env vars)
 RUN mix compile
 
@@ -58,12 +52,10 @@ FROM ${RUNNER_IMAGE}
 
 RUN apt-get update -y && \
     apt-get install -y \
-    libstdc++6 \
     openssl \
     libncurses5 \
     locales \
     ca-certificates \
-    curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale

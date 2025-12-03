@@ -42,10 +42,8 @@ require_env DISCORD_BOT_TOKEN "Set Discord bot token (DISCORD_BOT_TOKEN)."
 echo ""
 echo "🧩 Runtime Configuration:"
 require_env PHX_HOST "Set Phoenix host (PHX_HOST)."
-require_env PORT "Set service port (PORT)."
 require_env SECRET_KEY_BASE "Set secret key base (SECRET_KEY_BASE). Generate with: mix phx.gen.secret"
 echo "   PHX_HOST: ${PHX_HOST}"
-echo "   PORT: ${PORT}"
 echo "   PHX_SERVER: ${PHX_SERVER:-true}"
 
 # Optional configurations
@@ -85,6 +83,8 @@ echo ""
 
 # Set PHX_SERVER if not already set
 export PHX_SERVER=${PHX_SERVER:-true}
+export PORT=${PORT:-4000}
 
-# Start the release
+# Start the released application
+# exec _build/prod/rel/comms/bin/server
 exec /app/bin/comms start

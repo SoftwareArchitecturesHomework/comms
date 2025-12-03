@@ -1,7 +1,6 @@
 {
   "scripts": {
     "setup": "mix deps.get && mix compile",
-    "server": "mix phx.server",
     "server-iex": "iex -S mix phx.server",
     "test": "mix test",
     "list-mix-tasks": "mix help",

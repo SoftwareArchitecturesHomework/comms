@@ -186,7 +186,7 @@ defmodule Comms.Notifications do
   end
 
   defp attach_logo(email) do
-    path = Path.join([File.cwd!(), "priv/static/images/logo.png"]) |> Path.expand()
+    path = Application.app_dir(:comms, "priv/static/images/logo.png")
 
     if File.exists?(path) do
       attachment =
