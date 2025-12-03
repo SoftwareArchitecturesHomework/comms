@@ -46,30 +46,30 @@ defmodule Comms.Discord.Registrar do
     end
   end
 
-  # Command specs aligned with the JS example and our parser.
+  # Command specs for Discord slash commands
   defp build_commands do
     [
       %{
         name: "projects",
-        description: "List projects (placeholder)",
+        description: "List all your projects",
         type: 1,
         integration_types: [0, 1],
         contexts: [0, 1, 2]
       },
       %{
         name: "task",
-        description: "Create a task (placeholder)",
+        description: "Create a new task in a project",
         options: [
           %{
             type: 3,
             name: "project_id",
-            description: "Project ID",
+            description: "The ID of the project",
             required: true
           },
           %{
             type: 3,
             name: "name",
-            description: "Task name",
+            description: "The name of the task",
             required: true
           }
         ],
@@ -78,19 +78,19 @@ defmodule Comms.Discord.Registrar do
         contexts: [0, 2]
       },
       %{
-        name: "invite",
-        description: "Invite users to a task (placeholder)",
+        name: "assign",
+        description: "Assign a task to a user",
         options: [
           %{
             type: 3,
             name: "task_id",
-            description: "Task ID",
+            description: "The ID of the task",
             required: true
           },
           %{
-            type: 3,
-            name: "users",
-            description: "Space-separated users (@alice @bob)",
+            type: 6,
+            name: "user",
+            description: "The user to assign the task to",
             required: true
           }
         ],

@@ -4,8 +4,8 @@ defmodule Comms.Discord.Commands do
 
   Supported commands:
   - /projects -> fetches projects for the user from core service
-  - /task {project_id} {name} -> replies with a random task_id
-  - /invite {task_id} {...users} -> replies with an acknowledgement
+  - /task {project_id} {name} -> creates a task in the specified project
+  - /assign {task_id} @user -> assigns a task to a user
   """
 
   @spec handle(String.t(), String.t() | nil) :: {:ok, String.t()} | {:error, term()}
@@ -20,10 +20,10 @@ defmodule Comms.Discord.Commands do
         handle_projects(user_id)
 
       ["/task", rest] ->
-        handle_task(rest)
+        handle_task(rest, user_id)
 
-      ["/invite", rest] ->
-        handle_invite(rest)
+      ["/assign", rest] ->
+        handle_assign(rest, user_id)
 
       [unknown | _] ->
         {:ok, "Unknown command: #{unknown}"}
@@ -79,36 +79,112 @@ defmodule Comms.Discord.Commands do
     end
   end
 
-  defp handle_task(rest) do
+  defp handle_task(_, nil) do
+    {:ok, "Error: Unable to identify user"}
+  end
+
+  defp handle_task(rest, user_id) do
     # Expect: {project_id} {name}
     case String.split(rest, ~r/\s+/, parts: 2) do
       [project_id, name] when project_id != "" and name != "" ->
-        task_id = :rand.uniform(1_000_000)
-        {:ok, "Created task ##{task_id} for project #{project_id}: #{name}"}
+        core_service_url = Application.get_env(:comms, :core_service_url)
+
+        if is_nil(core_service_url) or core_service_url == "" do
+          {:ok, "Error: Core service not configured"}
+        else
+          case create_task(core_service_url, user_id, project_id, name) do
+            {:ok, task_id} ->
+              {:ok, "Created task ##{task_id}: #{name}"}
+
+            {:error, reason} ->
+              {:ok, "Error creating task: #{inspect(reason)}"}
+          end
+        end
 
       _ ->
         {:ok, "Usage: /task {project_id} {name}"}
     end
   end
 
-  defp handle_invite(rest) do
-    # Expect: {task_id} {...users}
-    case String.split(rest, ~r/\s+/, parts: 2) do
-      [task_id, users_str] when task_id != "" and users_str != "" ->
-        users =
-          users_str
-          |> String.split(~r/\s+/, trim: true)
-          |> Enum.map(&String.trim_leading(&1, "@"))
-          |> Enum.reject(&(&1 == ""))
+  defp create_task(base_url, user_id, project_id, name) do
+    url = "#{base_url}/api/discord/task"
 
-        if users == [] do
-          {:ok, "Usage: /invite {task_id} {@user1 @user2 ...}"}
+    body = %{
+      "id" => user_id,
+      "project_id" => String.to_integer(project_id),
+      "name" => name
+    }
+
+    case Req.post(url: url, json: body) do
+      {:ok, %Req.Response{status: 200, body: %{"id" => task_id}}} ->
+        {:ok, task_id}
+
+      {:ok, %Req.Response{status: status, body: body}} ->
+        {:error, {:http_error, status, body}}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp handle_assign(_, nil) do
+    {:ok, "Error: Unable to identify user"}
+  end
+
+  defp handle_assign(rest, user_id) do
+    # Expect: {task_id} @user
+    case String.split(rest, ~r/\s+/, parts: 2) do
+      [task_id, user_str] when task_id != "" and user_str != "" ->
+        # Extract Discord user ID from mention format
+        discord_user_id =
+          user_str
+          |> String.trim()
+          |> String.trim_leading("@")
+          |> String.trim_leading("<@")
+          |> String.trim_trailing(">")
+
+        if discord_user_id == "" do
+          {:ok, "Usage: /assign {task_id} @user"}
         else
-          {:ok, "Invited #{Enum.join(users, ", ")} to task #{task_id}"}
+          core_service_url = Application.get_env(:comms, :core_service_url)
+
+          if is_nil(core_service_url) or core_service_url == "" do
+            {:ok, "Error: Core service not configured"}
+          else
+            case assign_task(core_service_url, user_id, task_id, discord_user_id) do
+              {:ok, result} ->
+                assignee_name = get_in(result, ["assignee", "name"]) || "User"
+                {:ok, "Assigned task ##{task_id} to #{assignee_name}"}
+
+              {:error, reason} ->
+                {:ok, "Error assigning task: #{inspect(reason)}"}
+            end
+          end
         end
 
       _ ->
-        {:ok, "Usage: /invite {task_id} {@user1 @user2 ...}"}
+        {:ok, "Usage: /assign {task_id} @user"}
+    end
+  end
+
+  defp assign_task(base_url, user_id, task_id, discord_user_id) do
+    url = "#{base_url}/api/discord/assign"
+
+    body = %{
+      "id" => user_id,
+      "task_id" => String.to_integer(task_id),
+      "user_id" => discord_user_id
+    }
+
+    case Req.post(url: url, json: body) do
+      {:ok, %Req.Response{status: 200, body: result}} ->
+        {:ok, result}
+
+      {:ok, %Req.Response{status: status, body: body}} ->
+        {:error, {:http_error, status, body}}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 end

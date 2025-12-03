@@ -42,10 +42,10 @@ defmodule CommsWeb.DiscordController do
     "/task #{proj} #{name}"
   end
 
-  defp build_content_from_command("invite", options) do
+  defp build_content_from_command("assign", options) do
     task_id = get_option(options, "task_id")
-    users = get_option(options, "users")
-    "/invite #{task_id} #{users}"
+    user = get_option(options, "user")
+    "/assign #{task_id} #{user}"
   end
 
   defp build_content_from_command(other, _options), do: other || ""
