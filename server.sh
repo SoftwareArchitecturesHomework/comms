@@ -84,6 +84,7 @@ echo ""
 # Set PHX_SERVER if not already set
 export PHX_SERVER=${PHX_SERVER:-true}
 export PORT=${PORT:-4000}
+export MIX_ENV=prod
 
 # Start the released application
 # exec _build/prod/rel/comms/bin/server

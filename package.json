@@ -6,7 +6,8 @@
     "list-mix-tasks": "mix help",
     "rsa-key-gen": "ssh-keygen -t rsa -b 4096 -m PEM -f private.key",
     "rsa-pub-key-gen": "ssh-keygen -f private.key -e -m PKCS8 > public.key",
-    "docker-build": "docker build . -t wingsmc/comms:latest",
+    "docker:build": "docker build . -t wingsmc/comms:latest",
+    "docker:release": "docker build . -t wingsmc/work-planner-comms:latest && docker push wingsmc/work-planner-comms:latest",
     "ngrok:publish": "ngrok http 4000"
   }
 }

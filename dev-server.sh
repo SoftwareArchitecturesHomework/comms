@@ -63,6 +63,7 @@ echo ""
 
 # Set PHX_SERVER if not already set
 export PHX_SERVER=${PHX_SERVER:-true}
+export MIX_ENV=dev
 
 # exec mix phx.server
 mix discord.install_commands
