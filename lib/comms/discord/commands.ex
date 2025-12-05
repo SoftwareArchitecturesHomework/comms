@@ -79,9 +79,7 @@ defmodule Comms.Discord.Commands do
     end
   end
 
-  defp handle_task(_, nil) do
-    {:ok, "Error: Unable to identify user"}
-  end
+  defp handle_task(_, nil), do: {:ok, "Error: Unable to identify user"}
 
   defp handle_task(rest, user_id) do
     # Expect: {project_id} {name}
@@ -127,9 +125,7 @@ defmodule Comms.Discord.Commands do
     end
   end
 
-  defp handle_assign(_, nil) do
-    {:ok, "Error: Unable to identify user"}
-  end
+  defp handle_assign(_, nil), do: {:ok, "Error: Unable to identify user"}
 
   defp handle_assign(rest, user_id) do
     # Expect: {task_id} @user
@@ -154,6 +150,13 @@ defmodule Comms.Discord.Commands do
             case assign_task(core_service_url, user_id, task_id, discord_user_id) do
               {:ok, result} ->
                 assignee_name = get_in(result, ["assignee", "name"]) || "User"
+
+                Comms.Notifications.send_task_assignment_notification(%{
+                  "task" => result["task"],
+                  "assignee" => result["assignee"],
+                  "assigner" => result["assigner"]
+                })
+
                 {:ok, "Assigned task ##{task_id} to #{assignee_name}"}
 
               {:error, reason} ->
