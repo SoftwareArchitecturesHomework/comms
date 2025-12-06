@@ -38,12 +38,8 @@ defmodule Comms.Discord.Commands do
   end
 
   defp handle_projects(user_id) do
-    core_service_url = Application.get_env(:comms, :core_service_url)
-
-    if is_nil(core_service_url) or core_service_url == "" do
-      {:ok, "Error: Core service not configured"}
-    else
-      case fetch_user_projects(core_service_url, user_id) do
+    core_service(fn url ->
+      case fetch_user_projects(url, user_id) do
         {:ok, []} ->
           {:ok, "You have no projects assigned."}
 
@@ -60,7 +56,7 @@ defmodule Comms.Discord.Commands do
         {:error, reason} ->
           {:ok, "Error fetching projects: #{inspect(reason)}"}
       end
-    end
+    end)
   end
 
   defp fetch_user_projects(base_url, user_id) do
@@ -85,19 +81,15 @@ defmodule Comms.Discord.Commands do
     # Expect: {project_id} {name}
     case String.split(rest, ~r/\s+/, parts: 2) do
       [project_id, name] when project_id != "" and name != "" ->
-        core_service_url = Application.get_env(:comms, :core_service_url)
-
-        if is_nil(core_service_url) or core_service_url == "" do
-          {:ok, "Error: Core service not configured"}
-        else
-          case create_task(core_service_url, user_id, project_id, name) do
+        core_service(fn url ->
+          case create_task(url, user_id, project_id, name) do
             {:ok, task_id} ->
               {:ok, "Created task ##{task_id}: #{name}"}
 
             {:error, reason} ->
               {:ok, "Error creating task: #{inspect(reason)}"}
           end
-        end
+        end)
 
       _ ->
         {:ok, "Usage: /task {project_id} {name}"}
@@ -142,12 +134,8 @@ defmodule Comms.Discord.Commands do
         if discord_user_id == "" do
           {:ok, "Usage: /assign {task_id} @user"}
         else
-          core_service_url = Application.get_env(:comms, :core_service_url)
-
-          if is_nil(core_service_url) or core_service_url == "" do
-            {:ok, "Error: Core service not configured"}
-          else
-            case assign_task(core_service_url, user_id, task_id, discord_user_id) do
+          core_service(fn url ->
+            case assign_task(url, user_id, task_id, discord_user_id) do
               {:ok, result} ->
                 assignee_name = get_in(result, ["assignee", "name"]) || "User"
 
@@ -164,7 +152,7 @@ defmodule Comms.Discord.Commands do
               {:error, reason} ->
                 {:ok, "Error assigning task: #{inspect(reason)}"}
             end
-          end
+          end)
         end
 
       _ ->
@@ -190,6 +178,16 @@ defmodule Comms.Discord.Commands do
 
       {:error, reason} ->
         {:error, reason}
+    end
+  end
+
+  defp core_service(fun) do
+    url = Application.get_env(:comms, :core_service_url)
+
+    if is_nil(url) or url == "" do
+      {:ok, "Error: Core service not configured"}
+    else
+      fun.(url)
     end
   end
 end

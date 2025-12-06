@@ -11,7 +11,7 @@ defmodule Comms.Notifications do
   alias Swoosh.Email
 
   defp from_email, do: Application.get_env(:comms, :smtp_from_email)
-  defp application_url, do: Application.get_env(:comms, :core_service_url)
+  defp application_url, do: Application.get_env(:comms, :core_service_public_url)
   defp layout_path, do: Application.get_env(:comms, :email_layout_path)
   defp templates_path, do: Application.get_env(:comms, :email_templates_path)
 

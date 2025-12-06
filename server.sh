@@ -53,13 +53,9 @@ echo "   RELEASE_NODE: ${RELEASE_NODE}"
 
 
 # Optional configurations
-if [ -n "$CORE_SERVICE_HTTP" ]; then
-  echo "   CORE_SERVICE_HTTP: ${CORE_SERVICE_HTTP}"
-fi
-
-if [ -n "$DNS_CLUSTER_QUERY" ]; then
-  echo "   DNS_CLUSTER_QUERY: ${DNS_CLUSTER_QUERY}"
-fi
+echo "   CORE_SERVICE_HTTP: ${CORE_SERVICE_HTTP}"
+echo "   CORE_SERVICE_PUBLIC_HTTP: ${CORE_SERVICE_PUBLIC_HTTP}"
+echo "   DNS_CLUSTER_QUERY: ${DNS_CLUSTER_QUERY}"
 
 if [ "$JWT_DEBUG" = "1" ]; then
   echo "   JWT_DEBUG: enabled"

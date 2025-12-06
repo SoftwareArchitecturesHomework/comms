@@ -38,6 +38,10 @@ end
 # ## Core Service Configuration
 if core_service_url = System.get_env("CORE_SERVICE_HTTP") do
   config :comms, :core_service_url, core_service_url
+
+  config :comms,
+         :core_service_public_url,
+         System.get_env("CORE_SERVICE_PUBLIC_HTTP") || core_service_url
 end
 
 if smtp_username = System.get_env("SMTP_USERNAME") do
