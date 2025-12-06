@@ -26,10 +26,10 @@ message Project {
 }
 
 message TaskDetails {
-	int64 start = 2;
-	int64 end = 3;
-	string name = 4;
-	string description = 5;
+	int64 start = 1;
+	int64 end = 2;
+	string name = 3;
+	string description = 4;
 }
 
 message Task {
@@ -37,7 +37,7 @@ message Task {
 	TaskDetails details = 2;
 }
 
-message CreateTask {
+message CreateTaskMessage {
 	int64 project_id = 1;
 	TaskType type = 2;
 	TaskDetails details = 3;
@@ -64,6 +64,10 @@ message EmailResponse {
 	bool success = 1;
 }
 
+message ChangeResponse {
+	bool success = 1;
+}
+
 service CommsService {
 	rpc SendUserAddedToProjectNotification (ProjectMemberNotification) returns (EmailResponse);
 	rpc SendUserRemovedFromProjectNotification (ProjectMemberNotification) returns (EmailResponse);
@@ -79,8 +83,8 @@ service Core {
 	rpc GetProjectTasks (Project) returns (stream Task);
 	rpc GetUserTasks (User) returns (stream Task);
 
-	rpc CreateTask (CreateTask) returns (Task);
+	rpc CreateTask (CreateTaskMessage) returns (Task);
 
-	rpc InviteToTask (TaskAssignmentNotification) returns (bool);
-	rpc AcceptTaskInvitation (AcceptInvitation) returns (bool);
+	rpc InviteToTask (TaskAssignmentNotification) returns (ChangeResponse);
+	rpc AcceptTaskInvitation (AcceptInvitation) returns (ChangeResponse);
 }

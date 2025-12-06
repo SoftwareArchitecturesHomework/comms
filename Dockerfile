@@ -81,6 +81,9 @@ COPY --chown=appuser:appuser server.sh ./
 
 RUN chmod +x ./server.sh
 
+# Create tmp directory for daemon mode
+RUN mkdir -p /app/tmp && chown appuser:appuser /app/tmp
+
 USER appuser
 
 # Set default port (can be overridden)

@@ -117,9 +117,10 @@ end
 #
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
-if System.get_env("PHX_SERVER") do
-  config :comms, CommsWeb.Endpoint, server: true
-end
+server_enabled = System.get_env("PHX_SERVER") == "true"
+
+config :phoenix, :serve_endpoints, server_enabled
+config :comms, CommsWeb.Endpoint, server: server_enabled
 
 if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.

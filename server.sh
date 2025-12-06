@@ -39,12 +39,18 @@ require_env DISCORD_APP_ID "Set Discord application ID (DISCORD_APP_ID)."
 require_env DISCORD_PUBLIC_KEY "Set Discord public key (DISCORD_PUBLIC_KEY)."
 require_env DISCORD_BOT_TOKEN "Set Discord bot token (DISCORD_BOT_TOKEN)."
 
+export PORT=${PORT:-4000}
+export MIX_ENV=prod
+export RELEASE_DISTRIBUTION=name
+export RELEASE_NODE=comms@$(hostname -i | awk '{print $1}')
 echo ""
 echo "🧩 Runtime Configuration:"
 require_env PHX_HOST "Set Phoenix host (PHX_HOST)."
 require_env SECRET_KEY_BASE "Set secret key base (SECRET_KEY_BASE). Generate with: mix phx.gen.secret"
 echo "   PHX_HOST: ${PHX_HOST}"
-echo "   PHX_SERVER: ${PHX_SERVER:-true}"
+echo "   PORT: ${PORT:-4000}"
+echo "   RELEASE_NODE: ${RELEASE_NODE}"
+
 
 # Optional configurations
 if [ -n "$CORE_SERVICE_HTTP" ]; then
@@ -75,17 +81,19 @@ fi
 echo ""
 echo "✅ All required environment variables are set"
 echo ""
-echo "ℹ️  Discord commands should be installed after first startup:"
-echo "   docker exec <container> /app/bin/comms rpc 'Comms.Discord.Registrar.install_global_commands()'"
-echo ""
-echo "🎉 Starting server..."
-echo ""
 
-# Set PHX_SERVER if not already set
+echo "🤖 Installing Discord slash commands..."
+PHX_SERVER=false /app/bin/comms eval "Comms.Release.install_discord_commands()"
+
+if [ $? -ne 0 ]; then
+  echo "💡 You can manually install commands later with:"
+  echo "   docker exec <container> /app/bin/comms rpc 'Comms.Discord.Registrar.install_global_commands()'"
+fi
+
 export PHX_SERVER=${PHX_SERVER:-true}
-export PORT=${PORT:-4000}
-export MIX_ENV=prod
 
-# Start the released application
-# exec _build/prod/rel/comms/bin/server
+echo ""
+echo "🚀 Launching Comms server..."
+echo ""
+
 exec /app/bin/comms start
