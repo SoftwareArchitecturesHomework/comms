@@ -4,8 +4,7 @@ defmodule CommsWeb.HealthController do
   def check(conn, _params) do
     json(conn, %{
       status: "ok",
-      service: "comms",
-      random_emoji: Enum.random(["😀", "🚀", "🌟", "🔥", "💡", "🎉"])
+      service: "comms"
     })
   end
 end
