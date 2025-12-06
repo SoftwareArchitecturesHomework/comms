@@ -151,11 +151,13 @@ defmodule Comms.Discord.Commands do
               {:ok, result} ->
                 assignee_name = get_in(result, ["assignee", "name"]) || "User"
 
-                Comms.Notifications.send_task_assignment_notification(%{
-                  "task" => result["task"],
-                  "assignee" => result["assignee"],
-                  "assigner" => result["assigner"]
-                })
+                Task.start(fn ->
+                  Comms.Notifications.send_task_assignment_notification(%{
+                    "task" => result["task"],
+                    "assignee" => result["assignee"],
+                    "assigner" => result["assigner"]
+                  })
+                end)
 
                 {:ok, "Assigned task ##{task_id} to #{assignee_name}"}
 
